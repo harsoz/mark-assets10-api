@@ -12,7 +12,7 @@ export class CityRepository extends BaseRepository<City, CityModel> {
     super(repo);
   }
 
-  protected toModel(entity: City): CityModel {
+  toModel(entity: City): CityModel {
     return mapCity(entity);
   }
 }

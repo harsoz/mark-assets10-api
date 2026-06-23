@@ -29,7 +29,8 @@ export class CityService {
     query.skip(pageSize * (page - 1)).take(pageSize);
 
     const [data, totalCount] = await query.getManyAndCount();
+    const result = data.map(city => this._repository.toModel(city));
 
-    return { totalCount, data };
+    return { totalCount, data: result };
   }
 }

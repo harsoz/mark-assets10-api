@@ -3,9 +3,8 @@ import { EmailCollectionService } from './email-collection.service';
 import { EmailTemplateService } from './email-template.service';
 import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
+import { UserModel } from 'src/domain/models';
 
-// we need a model not an entity
-import { User } from 'src/infrastructure/database';
 
 // maybe we are missing using import { MailerModule } from '@nestjs-modules/mailer';
 
@@ -55,19 +54,19 @@ export class EmailService {
   }
 
   // part of EmailSender originally - move this to an strategy
-  async sendConfirmationLinkAsync(user: User, email: string, confirmationLink: string): Promise<void> {
+  async sendConfirmationLinkAsync(user: UserModel, email: string, confirmationLink: string): Promise<void> {
     const body = `Hola ${user.name}, su codigo de confirmacion es ${confirmationLink}`;
     const subject = 'Confirmacion Assets10';
     await this.sendEmail(body, subject, email);
   }
 
   // potentially need to move to an strategy to clarify code or link, because strategy reset-password already cover this
-  async sendPasswordResetLinkAsync(user: User, email: string, resetLink: string): Promise<void> {
+  async sendPasswordResetLinkAsync(user: UserModel, email: string, resetLink: string): Promise<void> {
     const emailObj = {template: "", subject: ""} // ResetPasswordEmail.buildTemplate(user, email, resetLink);
     await this.sendEmail(emailObj.template, emailObj.subject, email);
   }
 
-  async sendPasswordResetCodeAsync(user: User, email: string, resetCode: string): Promise<void> {
+  async sendPasswordResetCodeAsync(user: UserModel, email: string, resetCode: string): Promise<void> {
     const emailObj = {template: "", subject: ""} // ResetPasswordEmail.buildTemplate(user, email, resetCode);
     await this.sendEmail(emailObj.template, emailObj.subject, email);
   }

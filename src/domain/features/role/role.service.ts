@@ -84,7 +84,7 @@ export class RoleService {
     role.name = request.name;
     await this.roleRepo.create(role);
 
-    const currentPermissions = await this.roleManager.getPermissions(role as Role);
+    const currentPermissions = await this.roleManager.getPermissions(role);
     const toRemove = currentPermissions.filter(p => !request.permissions.includes(p));
     const toAdd = request.permissions.filter(p => !currentPermissions.includes(p));
 
@@ -102,6 +102,8 @@ export class RoleService {
     const role = await this.roleRepo.findById(roleId);
     if (!role) throw new NotFoundException('Role does not exist');
 
-    return await this.roleRepo.delete(roleId);
+    await this.roleRepo.delete(roleId);
+
+    return true;
   }
 }

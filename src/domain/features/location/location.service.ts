@@ -57,6 +57,8 @@ export class LocationService {
 
     const [data, totalCount] = await query.getManyAndCount();
 
-    return { totalCount, data };
+    const result = data.map((location) => this._cityRepo.toModel(location));
+
+    return { totalCount, data: result };
   }
 }
