@@ -1,0 +1,26 @@
+export enum ProjectStatus
+{
+    Cancelled,
+    Rejected,
+    RejectedAfterDueDiligence,
+    PendingFirstContract,
+    PendingToApprove,
+    PendingClosed,
+    PendingResources,
+    Expired,
+    Approved,
+    Closed,
+    AgreementClosed,
+    TechnicalScoringAssets10,
+    TechnicalReview,
+    UnderContractWithOwner,
+    FirstFundingIncome,
+    DueDiligence,
+    ContractWithCapital,
+    FundingAgreement,
+    Escrow,
+    PermittingAndStructuring,
+    PermitsApproved,
+    FinalClosing,
+    NotEconomicallyViable
+}
