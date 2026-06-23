@@ -16,6 +16,7 @@ export interface ProjectModel extends BaseModel {
   status?: ProjectStatus;
   currency: Currency;
   measureUnit: MeasureUnit;
+  projectType: ProjectType;
   title: string;
   address?: string;
   zipCode?: string;

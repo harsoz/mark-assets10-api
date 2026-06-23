@@ -3,6 +3,8 @@
  * Use this file as a starting point for database seeding or fixture generation.
  */
 
+import { ProjectType } from "../types/project.type";
+
 export const feedOrder = [
   'roles',
   'regions',
@@ -277,6 +279,7 @@ export const sampleFeeds = {
       id: 'a1b2c3d4-e5f6-47a9-8c5b-3d7f9e1a2c4d',
       status: '8',
       currency: '0',
+      ProjectType: 'Asset',
       measureUnit: '0',
       title: 'San Francisco Solar Park',
       address: '123 Solar Ave, San Francisco, CA',
@@ -304,6 +307,7 @@ export const sampleFeeds = {
       status: '4',
       currency: '1',
       measureUnit: '1',
+      projectType: 'Development',
       title: 'Barcelona Office Complex',
       address: 'Plaça de Catalunya 1, Barcelona',
       zipCode: '08002',
@@ -330,6 +334,7 @@ export const sampleFeeds = {
       status: '13',
       currency: '2',
       measureUnit: '1',
+      projectType: 'Financing',
       title: 'Santiago Mixed-Use Campus',
       address: 'Av. Providencia 2500, Santiago',
       zipCode: '7500000',

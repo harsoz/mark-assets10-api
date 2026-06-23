@@ -14,6 +14,7 @@ import { ProjectStatus } from '../types/project-status.type';
 import { Currency } from '../types/currency.type';
 import { MeasureUnit } from '../types/measure-unit.type';
 import { ProjectFile } from '../project-file.entity';
+import { ProjectType } from '../types/project.type';
 
 @Entity("projects")
 export class Project extends BaseEntity {
@@ -26,6 +27,9 @@ export class Project extends BaseEntity {
 
   @Column({ type: 'varchar', length: 24, enum: MeasureUnit, default: MeasureUnit.Sqft })
   measureUnit!: MeasureUnit;
+
+  @Column({ type: 'varchar', length: 50, enum: ProjectType, default: ProjectType.Asset })
+  projectType!: ProjectType;
 
   @Column()
   title!: string;

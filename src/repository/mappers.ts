@@ -232,6 +232,7 @@ export function mapProjectFile(entity: ProjectFile): ProjectFileModel {
 export function mapProject(entity: Project): ProjectModel {
   return {
     id: entity.id,
+    projectType: entity.projectType,
     status: entity.status,
     currency: entity.currency,
     measureUnit: entity.measureUnit,
