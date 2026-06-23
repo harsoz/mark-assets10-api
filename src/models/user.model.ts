@@ -54,11 +54,11 @@ export interface TrustedDeviceModel extends BaseModel {
 
 export interface UserDynamicFieldModel {
   id: number;
-  profileType?: ProfileType;
-  profile: string;
-  jsonData: string;
   userId?: string;
   user?: UserModel;
+  dynamicFieldId?: number;
+  dynamicField?: DynamicFieldModel;
+  dynamicFieldValues?: string;
 }
 
 export interface UserProjectModel {
@@ -68,6 +68,8 @@ export interface UserProjectModel {
   project?: ProjectModel;
   projectType: ProjectType;
   status?: ProjectStatus;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface UserModel extends BaseModel {

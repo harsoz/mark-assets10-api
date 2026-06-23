@@ -1,4 +1,4 @@
-import type { BaseModel, LocationModel as BaseLocationModel } from './base.model';
+import type { BaseModel, LocationModel as BaseLocationModel, TimeStampsModel } from './base.model';
 
 export interface CountryModel extends BaseLocationModel {
   id: number;
@@ -55,7 +55,8 @@ export interface CityModel extends BaseLocationModel {
   state?: StateModel;
 }
 
-export interface RegionModel extends BaseModel {
+export interface RegionModel extends TimeStampsModel {
+  id: number;
   name: string;
   translations: string;
   flag: string;
@@ -63,7 +64,8 @@ export interface RegionModel extends BaseModel {
   subRegions?: SubRegionModel[];
 }
 
-export interface SubRegionModel extends BaseModel {
+export interface SubRegionModel extends TimeStampsModel {
+  id: number;
   name: string;
   translations: string;
   flag: string;
