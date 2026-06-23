@@ -7,4 +7,4 @@ import { CityService } from './city.service';
   controllers: [CityController],
   providers: [CityService],
 })
-export class UserModule {}
+export class CityModule {}

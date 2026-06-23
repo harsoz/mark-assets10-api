@@ -4,11 +4,12 @@ import { ConfigModule } from '@nestjs/config';
 import { AltiriaService } from './altiria.service';
 import { BoldService } from './bold.service';
 import { NotificationService } from './notification.service';
+import { ExcelService } from './excel.service';
 
 @Module({
-  imports: [ConfigModule,HttpModule],
+  imports: [ConfigModule, HttpModule],
   controllers: [],
-  providers: [AltiriaService, BoldService, NotificationService],
-  exports: [AltiriaService, BoldService, NotificationService]
+  providers: [AltiriaService, BoldService, NotificationService, ExcelService],
+  exports: [AltiriaService, BoldService, NotificationService, ExcelService],
 })
 export class ThirdPartiesModule {}
