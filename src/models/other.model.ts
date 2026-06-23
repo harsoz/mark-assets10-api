@@ -1,6 +1,6 @@
 import type { BaseModel } from './base.model';
 import type { UserModel } from './user.model';
-import type { ProfileType } from '../database/types/profile.type';
+import type { ProfileType } from '../types/profile.type';
 
 export interface AuthCodeModel extends BaseModel {
   userId: string;

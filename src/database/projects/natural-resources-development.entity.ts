@@ -1,6 +1,6 @@
 import { Column, Entity } from 'typeorm';
 import { ChildProject } from './child-project';
-import { InfrastructureSegment } from '../types/infrastructure-segment.type';
+import { InfrastructureSegment } from '../../types/infrastructure-segment.type';
 
 @Entity('natural_resources_developments')
 export class NaturalResourcesDevelopment extends ChildProject {

@@ -10,11 +10,11 @@ import { User } from '../user.entity';
 import { Country } from '../country.entity';
 import { State } from '../state.entity';
 import { City } from '../city.entity';
-import { ProjectStatus } from '../types/project-status.type';
-import { Currency } from '../types/currency.type';
-import { MeasureUnit } from '../types/measure-unit.type';
+import { ProjectStatus } from '../../types/project-status.type';
+import { Currency } from '../../types/currency.type';
+import { MeasureUnit } from '../../types/measure-unit.type';
 import { ProjectFile } from '../project-file.entity';
-import { ProjectType } from '../types/project.type';
+import { ProjectType } from '../../types/project.type';
 
 @Entity("projects")
 export class Project extends BaseEntity {

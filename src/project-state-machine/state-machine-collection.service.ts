@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { assetsMachine } from './assets-machine.state';
-import { ProjectType } from 'src/database/types/project.type';
+import { ProjectType } from 'src/types/project.type';
 
 @Injectable()
 export class StateMachineCollectionService {

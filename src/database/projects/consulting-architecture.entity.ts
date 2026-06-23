@@ -1,6 +1,6 @@
 import { Column, Entity } from 'typeorm';
-import { DevelopmentSubtype } from '../types/development-subtype.type';
-import { ServiceType } from '../types/service.type';
+import { DevelopmentSubtype } from '../../types/development-subtype.type';
+import { ServiceType } from '../../types/service.type';
 import { ChildProject } from './child-project';
 
 @Entity('consulting_architectures') 

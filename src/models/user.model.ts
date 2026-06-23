@@ -2,11 +2,11 @@ import type { BaseModel } from './base.model';
 import type { CountryModel, StateModel, CityModel } from './location.model';
 import type { ProjectModel } from './project.model';
 import type { DynamicFieldModel, DataUserProfileModel } from './other.model';
-import type { LanguageType } from '../database/types/language.type';
-import type { UserStatus } from '../database/types/user-status.type';
-import type { ProfileType } from '../database/types/profile.type';
-import type { ProjectType } from '../database/types/project.type';
-import type { ProjectStatus } from '../database/types/project-status.type';
+import type { LanguageType } from '../types/language.type';
+import type { UserStatus } from '../types/user-status.type';
+import type { ProfileType } from '../types/profile.type';
+import type { ProjectType } from '../types/project.type';
+import type { ProjectStatus } from '../types/project-status.type';
 
 export interface RoleModel extends BaseModel {
   name: string;

@@ -4,7 +4,7 @@ import {
   Column 
 } from 'typeorm';
 import { TimeStamps } from './base/timestamps';
-import { ProfileType } from './types/profile.type';
+import { ProfileType } from '../types/profile.type';
 
 @Entity('dynamic_fields')
 export class DynamicField extends TimeStamps {

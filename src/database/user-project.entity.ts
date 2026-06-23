@@ -8,8 +8,8 @@ import {
 import { TimeStamps } from './base/timestamps';
 import { User } from './user.entity';
 import { Project } from './projects/project.entity';
-import { ProjectType } from './types/project.type';
-import { ProjectStatus } from './types/project-status.type';
+import { ProjectType } from '../types/project.type';
+import { ProjectStatus } from '../types/project-status.type';
 
 @Entity('user_projects')
 export class UserProject extends TimeStamps {

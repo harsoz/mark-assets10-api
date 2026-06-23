@@ -1,7 +1,7 @@
 import { Column, Entity } from 'typeorm';
-import { FinancingSubtype } from '../types/financing-subtype.type';
-import { InfrastructureType } from '../types/infrastructure.type';
-import { InfrastructureSegment } from '../types/infrastructure-segment.type';
+import { FinancingSubtype } from '../../types/financing-subtype.type';
+import { InfrastructureType } from '../../types/infrastructure.type';
+import { InfrastructureSegment } from '../../types/infrastructure-segment.type';
 import { ChildProject } from './child-project';
 
 @Entity('energy_assets')

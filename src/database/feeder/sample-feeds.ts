@@ -3,7 +3,7 @@
  * Use this file as a starting point for database seeding or fixture generation.
  */
 
-import { ProjectType } from "../types/project.type";
+import { ProjectType } from "../../types/project.type";
 
 export const feedOrder = [
   'roles',

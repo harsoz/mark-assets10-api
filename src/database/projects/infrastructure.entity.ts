@@ -1,7 +1,7 @@
 import { Entity, Column } from 'typeorm';
 import { ChildProject } from './child-project';
-import { InfrastructureType } from '../types/infrastructure.type';
-import { InfrastructureSegment } from '../types/infrastructure-segment.type';
+import { InfrastructureType } from '../../types/infrastructure.type';
+import { InfrastructureSegment } from '../../types/infrastructure-segment.type';
 
 @Entity('infrastructures')
 export class Infrastructure extends ChildProject {

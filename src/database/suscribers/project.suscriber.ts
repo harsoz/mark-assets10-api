@@ -6,7 +6,7 @@ import {
 } from 'typeorm';
 import { Project } from '../projects/project.entity';
 import { UserProject } from '../user-project.entity';
-import { ProjectType } from '../types/project.type';
+import { ProjectType } from '../../types/project.type';
 
 @EventSubscriber()
 export class EntityEventSubscriber implements EntitySubscriberInterface {

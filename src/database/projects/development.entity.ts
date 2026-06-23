@@ -1,5 +1,5 @@
 import { Column, Entity } from 'typeorm';
-import { DevelopmentSubtype } from '../types/development-subtype.type';
+import { DevelopmentSubtype } from '../../types/development-subtype.type';
 import { ChildProject } from './child-project';
 
 @Entity('developments')

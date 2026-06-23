@@ -11,8 +11,8 @@ import {
   OneToOne, 
   JoinColumn 
 } from 'typeorm';
-import { LanguageType } from './types/language.type';
-import { UserStatus } from './types/user-status.type';
+import { LanguageType } from '../types/language.type';
+import { UserStatus } from '../types/user-status.type';
 import { Role } from './role.entity';
 import { ProfessionalExperience } from './professional-experience.entity';
 import { Education } from './education.entity';

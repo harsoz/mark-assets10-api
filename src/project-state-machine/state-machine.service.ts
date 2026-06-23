@@ -1,7 +1,7 @@
 import { createActor } from 'xstate';
 import { Injectable } from '@nestjs/common';
 import { ProjectModel } from 'src/models';
-import { ProjectStatus } from 'src/database/types/project-status.type';
+import { ProjectStatus } from 'src/types/project-status.type';
 import { ProjectRepository } from 'src/repository';
 import { StateMachineCollectionService } from './state-machine-collection.service';
 

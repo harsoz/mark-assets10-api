@@ -1,6 +1,6 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { BaseEntity } from './base/base';
-import { FileType } from './types/file.type';
+import { FileType } from '../types/file.type';
 import { Project } from './projects/project.entity';
 
 @Entity('project_files')

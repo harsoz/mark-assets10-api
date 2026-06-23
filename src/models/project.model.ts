@@ -1,16 +1,16 @@
 import type { BaseModel } from './base.model';
 import type { CountryModel, StateModel, CityModel } from './location.model';
 import type { UserModel } from './user.model';
-import type { Currency } from '../database/types/currency.type';
-import type { MeasureUnit } from '../database/types/measure-unit.type';
-import type { ProjectStatus } from '../database/types/project-status.type';
-import type { FileType } from '../database/types/file.type';
-import type { ProjectType } from '../database/types/project.type';
-import type { DevelopmentSubtype } from '../database/types/development-subtype.type';
-import type { FinancingSubtype } from '../database/types/financing-subtype.type';
-import type { InfrastructureType } from '../database/types/infrastructure.type';
-import type { InfrastructureSegment } from '../database/types/infrastructure-segment.type';
-import type { ServiceType } from '../database/types/service.type';
+import type { Currency } from '../types/currency.type';
+import type { MeasureUnit } from '../types/measure-unit.type';
+import type { ProjectStatus } from '../types/project-status.type';
+import type { FileType } from '../types/file.type';
+import type { ProjectType } from '../types/project.type';
+import type { DevelopmentSubtype } from '../types/development-subtype.type';
+import type { FinancingSubtype } from '../types/financing-subtype.type';
+import type { InfrastructureType } from '../types/infrastructure.type';
+import type { InfrastructureSegment } from '../types/infrastructure-segment.type';
+import type { ServiceType } from '../types/service.type';
 
 export interface ProjectModel extends BaseModel {
   status?: ProjectStatus;

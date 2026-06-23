@@ -1,6 +1,6 @@
 import { Entity, Column } from 'typeorm';
 import { ChildProject } from './child-project';
-import { FinancingSubtype } from '../types/financing-subtype.type';
+import { FinancingSubtype } from '../../types/financing-subtype.type';
 
 @Entity('natural_resources_financings')
 export class NaturalResourcesFinancing extends ChildProject {
