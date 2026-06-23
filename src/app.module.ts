@@ -3,9 +3,15 @@ import { AppController } from './app.controller';
 import { DatabaseModule } from './database/database.module';
 import { RepositoryModule } from './repository/repository.model';
 import { ThirdPartiesModule } from './third-parties/third-parties.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [DatabaseModule, RepositoryModule, ThirdPartiesModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    DatabaseModule,
+    RepositoryModule,
+    ThirdPartiesModule,
+  ],
   controllers: [AppController],
   providers: [],
 })
