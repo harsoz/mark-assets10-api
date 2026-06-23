@@ -27,6 +27,8 @@ import type { VerifiedPhone } from 'src/infrastructure/database/verified-phone.e
 import type { Education } from 'src/infrastructure/database/education.entity';
 import type { ProfessionalExperience } from 'src/infrastructure/database/professional-experience.entity';
 import type { Notification } from 'src/infrastructure/database/notification.entity';
+import { Permission } from '../database';
+import { PermissionModel } from 'src/domain/models/permission.model';
 
 export function mapCountry(entity: Country): CountryModel {
   return {
@@ -447,5 +449,13 @@ export function mapUser(entity: User): UserModel {
     state: entity.state ? mapState(entity.state) : undefined,
     cityId: entity.cityId,
     city: entity.city ? mapCity(entity.city) : undefined,
+  };
+}
+
+export function mapPermission(entity: Permission): PermissionModel {
+  return {
+    id: entity.id,
+    roleId: entity.roleId,
+    value: entity.value
   };
 }

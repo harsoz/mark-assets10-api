@@ -13,11 +13,6 @@ export abstract class BaseRepository<TEntity extends ObjectLiteral, TModel> {
     return this.toModel(saved);
   }
 
-  async findAll(options?: FindManyOptions<TEntity>): Promise<TModel[]> {
-    const entities = await this.repository.find(options);
-    return entities.map((entity) => this.toModel(entity));
-  }
-
   async findById(id: string | number, options?: FindOneOptions<TEntity>): Promise<TModel | null> {
     const entity = await this.repository.findOne({ where: this.buildPrimaryKeyCriteria(id), ...options } as FindOneOptions<TEntity>);
     return entity ? this.toModel(entity) : null;
@@ -35,6 +30,15 @@ export abstract class BaseRepository<TEntity extends ObjectLiteral, TModel> {
 
   createQueryBuilder(alias: string) {
     return this.repository.createQueryBuilder(alias);
+  }
+
+  async findOne(options: FindOneOptions<TEntity>): Promise<TEntity | null> {
+    return await this.repository.findOne(options);
+  }
+
+  async findAll(options?: FindManyOptions<TEntity>): Promise<TModel[]> {
+    const entities = await this.repository.find(options);
+    return entities.map((entity) => this.toModel(entity));
   }
 
   protected abstract toModel(entity: TEntity): TModel;

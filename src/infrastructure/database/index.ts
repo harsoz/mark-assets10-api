@@ -17,6 +17,7 @@ export * from './user-dynamic-field.entity';
 export * from './user-project.entity';
 export * from './user.entity';
 export * from './verified-phone.entity';
+export * from './permission.entity'
 
 // projects
 export * from './projects/project.entity';
