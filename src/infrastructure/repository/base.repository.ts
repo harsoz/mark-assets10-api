@@ -33,5 +33,9 @@ export abstract class BaseRepository<TEntity extends ObjectLiteral, TModel> {
     await this.repository.delete(this.buildPrimaryKeyCriteria(id) as any);
   }
 
+  createQueryBuilder(alias: string) {
+    return this.repository.createQueryBuilder(alias);
+  }
+
   protected abstract toModel(entity: TEntity): TModel;
 }

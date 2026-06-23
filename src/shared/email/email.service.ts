@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 // we need a model not an entity
 import { User } from 'src/infrastructure/database';
 
+// maybe we are missing using import { MailerModule } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class EmailService {
@@ -53,12 +54,14 @@ export class EmailService {
     }
   }
 
+  // part of EmailSender originally - move this to an strategy
   async sendConfirmationLinkAsync(user: User, email: string, confirmationLink: string): Promise<void> {
     const body = `Hola ${user.name}, su codigo de confirmacion es ${confirmationLink}`;
     const subject = 'Confirmacion Assets10';
     await this.sendEmail(body, subject, email);
   }
 
+  // potentially need to move to an strategy to clarify code or link, because strategy reset-password already cover this
   async sendPasswordResetLinkAsync(user: User, email: string, resetLink: string): Promise<void> {
     const emailObj = {template: "", subject: ""} // ResetPasswordEmail.buildTemplate(user, email, resetLink);
     await this.sendEmail(emailObj.template, emailObj.subject, email);
@@ -68,4 +71,46 @@ export class EmailService {
     const emailObj = {template: "", subject: ""} // ResetPasswordEmail.buildTemplate(user, email, resetCode);
     await this.sendEmail(emailObj.template, emailObj.subject, email);
   }
+
+  // part of EmailService originally (covered by strategies)
+  /**
+   * public async Task<bool> AccountCreated(User user)
+        {
+            if (!string.IsNullOrEmpty(user.Email))
+            {
+                var template = await _context.EmailTemplates.Where(x => x.Name == AccountCreatedEmail.Name).FirstOrDefaultAsync();
+
+                var emailDef = AccountCreatedEmail.BuildTemplate(user, user.Email, template);
+
+                return SendEmail(user.Email, emailDef.Subject, emailDef.Template);
+            }
+            return false;
+        }
+
+        public async Task<bool> SubmitInfoForm(InfoFormDTO info)
+        {
+            if (!string.IsNullOrEmpty(ReceiverEmail))
+            {
+                var template = await _context.EmailTemplates.Where(x => x.Name == InfoFormEmail.Name).FirstOrDefaultAsync();
+                var emailDef = InfoFormEmail.BuildTemplate(info, template);
+
+                return SendEmail(ReceiverEmail, emailDef.Subject, emailDef.Template);
+            }
+            return false;
+        }
+
+        public async Task<bool> SendVerificationCode(User user, string code)
+        {
+            if (!string.IsNullOrEmpty(user.Email))
+            {
+                var template = await _context.EmailTemplates.Where(x => x.Name == TwoFactorAuthenticationEmail.Name).FirstOrDefaultAsync();
+                var emailDef = TwoFactorAuthenticationEmail.BuildTemplate(user.Email, code, template);
+
+                return SendEmail(user.Email, emailDef.Subject, emailDef.Template);
+            }
+            return false;
+        }
+   * 
+   */
+
 }

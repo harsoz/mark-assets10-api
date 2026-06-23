@@ -4,6 +4,7 @@ import { DatabaseModule } from './infrastructure/database/database.module';
 import { RepositoryModule } from './infrastructure/repository/repository.model';
 import { ThirdPartiesModule } from './shared/third-parties/third-parties.module';
 import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './domain/features/user/user.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { ConfigModule } from '@nestjs/config';
     DatabaseModule,
     RepositoryModule,
     ThirdPartiesModule,
+    UserModule
   ],
   controllers: [AppController],
   providers: [],
