@@ -3,7 +3,7 @@ CREATE OR ALTER PROCEDURE dbo.sp_getProjectsFilteredByType
     -- General filters
     @page INT = NULL,
     @pageSize INT = NULL,
-    @userId INT = NULL,
+    @userId NVARCHAR(MAX) = NULL,
     @isActive BIT = NULL,
     @countryId INT = NULL,
     @stateId INT = NULL,
@@ -37,15 +37,15 @@ BEGIN
 
     -- 1. Map type ID to the specific detail table
     SET @TableName = CASE @projectType
-        WHEN 0 THEN 'assets' 
-        WHEN 1 THEN 'consulting_architectures'
-        WHEN 2 THEN 'developments' 
-        WHEN 3 THEN 'energy_assets'
-        WHEN 4 THEN 'financings' 
-        WHEN 5 THEN 'infrastructures'
-        WHEN 6 THEN 'natural_resources_developments' 
-        WHEN 7 THEN 'natural_resources_financings'
-        WHEN 8 THEN 'real_states' 
+        WHEN 'Asset' THEN 'assets' 
+        WHEN 'ConsultingArchitecture' THEN 'consulting_architectures'
+        WHEN 'Development' THEN 'developments' 
+        WHEN 'EnergyAsset' THEN 'energy_assets'
+        WHEN 'Financing' THEN 'financings' 
+        WHEN 'Infrastructure' THEN 'infrastructures'
+        WHEN 'NaturalResourcesDevelopment' THEN 'natural_resources_developments' 
+        WHEN 'NaturalResourcesFinancing' THEN 'natural_resources_financings'
+        WHEN 'RealState' THEN 'real_states' 
         ELSE NULL
     END;
 
@@ -62,7 +62,7 @@ BEGIN
         CAST(p.quantity AS NVARCHAR) LIKE ''%'' + @search + ''%''
     ) ';
     IF @userId IS NOT NULL SET @WhereClause += N' AND (p.ownerId = @userId OR p.lawyerId = @userId OR p.approverId = @userId OR p.analystId = @userId)';
-    IF @isActive = 1 SET @WhereClause += N' AND (p.projectStatus != 0 OR p.projectStatus != 9) ';
+    IF @isActive = 1 SET @WhereClause += N' AND (p.status != ''Cancelled'' OR p.status != ''Rejected'') ';
     IF @countryId IS NOT NULL SET @WhereClause += N' AND p.countryId = @countryId ';
     IF @stateId IS NOT NULL SET @WhereClause += N' AND p.stateId = @stateId ';
     IF @cityId IS NOT NULL SET @WhereClause += N' AND p.cityId = @cityId ';
@@ -86,7 +86,7 @@ BEGIN
     END
 
     -- 3. Build Dynamic WHERE clause for Particular Filters
-    IF @projectType = 0 -- Asset
+    IF @projectType = 'Asset'
     BEGIN
         IF @type IS NOT NULL
         BEGIN
@@ -105,7 +105,7 @@ BEGIN
             SET @WhereClause += N' AND d.landArea <= @maxLandArea ';
         END
     END
-    ELSE IF @projectType = 1 -- ConsultingArchitecture
+    ELSE IF @projectType =  'ConsultingArchitecture'
     BEGIN
         IF @type IS NOT NULL
         BEGIN
@@ -120,7 +120,7 @@ BEGIN
             SET @WhereClause += N' AND d.landAvailable = @landAvailable ';
         END
     END 
-    ELSE IF @projectType = 2 -- Development
+    ELSE IF @projectType = 'Development'
     BEGIN
         IF @type IS NOT NULL
         BEGIN
@@ -131,7 +131,7 @@ BEGIN
             SET @WhereClause += N' AND d.landAvailable = @landAvailable ';
         END
     END 
-    ELSE IF @projectType = 3 -- EnergyAsset
+    ELSE IF @projectType = 'EnergyAsset'
     BEGIN
         IF @type IS NOT NULL
         BEGIN
@@ -150,7 +150,7 @@ BEGIN
             SET @WhereClause += N' AND d.storageIncluded = @storageIncluded ';
         END
     END 
-    ELSE IF @projectType = 4 -- Financing
+    ELSE IF @projectType = 'Financing'
     BEGIN
         IF @type IS NOT NULL
         BEGIN
@@ -161,7 +161,7 @@ BEGIN
             SET @WhereClause += N' AND d.landAvailable = @landAvailable ';
         END
     END 
-    ELSE IF @projectType = 5 -- Infrastructure
+    ELSE IF @projectType = 'Infrastructure'
     BEGIN
         IF @type IS NOT NULL
         BEGIN
@@ -179,7 +179,7 @@ BEGIN
     -- ELSE IF @projectType = 7 -- NaturalResourcerFinancing
     -- BEGIN
     -- END 
-    ELSE IF @projectType = 8 -- RealState
+    ELSE IF @projectType = 'RealState'
     BEGIN
         IF @type IS NOT NULL
         BEGIN
@@ -240,8 +240,8 @@ BEGIN
 
     -- 6. Execute with all parameters
     EXEC sp_executesql @SQL, 
-        N'@projectType INT, 
-          @userId INT, 
+        N'@projectType NVARCHAR(MAX), 
+          @userId NVARCHAR(MAX), 
           @countryId INT, 
           @stateId INT, 
           @cityId INT, 

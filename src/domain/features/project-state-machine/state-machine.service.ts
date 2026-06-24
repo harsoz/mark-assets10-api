@@ -29,9 +29,9 @@ export class StateMachineService {
 
     const newStatus = nextState.value as string;
 
-    if (Object.values(ProjectStatus).includes(newStatus)) {
-      project.status = ProjectStatus[newStatus];
-      
+    if (Object.values(ProjectStatus).includes(newStatus as ProjectStatus)) {
+      project.status = newStatus as ProjectStatus;
+
       // we can evaluate whether we need a notification
 
       await this._repository.update(project.id, project);

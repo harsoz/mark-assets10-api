@@ -1,5 +1,5 @@
 export enum TransactionType
 {
-    Charge,
-    Deposit
+    Charge = 'Charge',
+    Deposit = 'Deposit'
 }

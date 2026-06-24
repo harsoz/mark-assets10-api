@@ -1,15 +1,14 @@
-export enum Permissions
-    {
-        CreateRole,
-        UpdateRole,
-        DeleteRole,
-        GetRoles,
-        CreateUser,
-        UpdateUser,
-        DeleteUser,
-        GetUsers,
-        GetUserProfiles,
-        GetPermissions,
-        UpdateRealStatePermissions
+export enum Permissions {
+    CreateRole = 'CreateRole',
+    UpdateRole = 'UpdateRole',
+    DeleteRole = 'DeleteRole',
+    GetRoles = 'GetRoles',
+    CreateUser = 'CreateUser',
+    UpdateUser = 'UpdateUser',
+    DeleteUser = 'DeleteUser',
+    GetUsers = 'GetUsers',
+    GetUserProfiles = 'GetUserProfiles',
+    GetPermissions = 'GetPermissions',
+    UpdateRealStatePermissions = 'UpdateRealStatePermissions'
+}
 
-    }

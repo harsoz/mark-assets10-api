@@ -277,10 +277,10 @@ export const sampleFeeds = {
   projects: [
     {
       id: 'a1b2c3d4-e5f6-47a9-8c5b-3d7f9e1a2c4d',
-      status: '8',
-      currency: '0',
+      status: 'Approved',
+      currency: 'USD',
       ProjectType: 'Asset',
-      measureUnit: '0',
+      measureUnit: 'Sqft',
       title: 'San Francisco Solar Park',
       address: '123 Solar Ave, San Francisco, CA',
       zipCode: '94103',
@@ -304,9 +304,9 @@ export const sampleFeeds = {
     },
     {
       id: 'b2c3d4e5-f6a7-48b0-9d6c-4e8a0f2b3d5e',
-      status: '4',
-      currency: '1',
-      measureUnit: '1',
+      status: 'Approved',
+      currency: 'USD',
+      measureUnit: 'Sqft',
       projectType: 'Development',
       title: 'Barcelona Office Complex',
       address: 'Plaça de Catalunya 1, Barcelona',
@@ -331,9 +331,9 @@ export const sampleFeeds = {
     },
     {
       id: 'c3d4e5f6-a7b8-49c1-0e7d-5f9b1a3c4e6f',
-      status: '13',
-      currency: '2',
-      measureUnit: '1',
+      status: 'Approved',
+      currency: 'USD',
+      measureUnit: 'Sqft',
       projectType: 'Financing',
       title: 'Santiago Mixed-Use Campus',
       address: 'Av. Providencia 2500, Santiago',
@@ -389,28 +389,28 @@ export const sampleFeeds = {
   ],
 
   energyAssets: [
-    { projectId: 'a1b2c3d4-e5f6-47a9-8c5b-3d7f9e1a2c4d', infrastructureType: '0', energyOutput: '25MW', segment: 'UtilityScale' },
-    { projectId: 'b2c3d4e5-f6a7-48b0-9d6c-4e8a0f2b3d5e', infrastructureType: '3', energyOutput: '15MW', segment: 'UtilityScale' },
-    { projectId: 'c3d4e5f6-a7b8-49c1-0e7d-5f9b1a3c4e6f', infrastructureType: '1', energyOutput: '30MW', segment: 'PMGD' },
+    { projectId: 'a1b2c3d4-e5f6-47a9-8c5b-3d7f9e1a2c4d', infrastructureType: 'RailwayNetwork', energyOutput: '25MW', segment: 'UtilityScale' },
+    { projectId: 'b2c3d4e5-f6a7-48b0-9d6c-4e8a0f2b3d5e', infrastructureType: 'RailwayNetwork', energyOutput: '15MW', segment: 'UtilityScale' },
+    { projectId: 'c3d4e5f6-a7b8-49c1-0e7d-5f9b1a3c4e6f', infrastructureType: 'RailwayNetwork', energyOutput: '30MW', segment: 'PMGD' },
   ],
 
   consultingArchitectures: [
     {
       projectId: 'a1b2c3d4-e5f6-47a9-8c5b-3d7f9e1a2c4d',
-      projectSubtype: '0',
-      serviceType: '1',
+      projectSubtype: 'Financing',
+      serviceType: 'Architecture',
       landAvailable: true,
     },
     {
       projectId: 'b2c3d4e5-f6a7-48b0-9d6c-4e8a0f2b3d5e',
-      projectSubtype: '1',
-      serviceType: '0',
+      projectSubtype: 'Financing',
+      serviceType: 'Architecture',
       landAvailable: false,
     },
     {
       projectId: 'c3d4e5f6-a7b8-49c1-0e7d-5f9b1a3c4e6f',
-      projectSubtype: '0',
-      serviceType: '1',
+      projectSubtype: 'Financing',
+      serviceType: 'Architecture',
       landAvailable: true,
     },
   ],
@@ -445,7 +445,7 @@ export const sampleFeeds = {
   financings: [
     {
       projectId: 'a1b2c3d4-e5f6-47a9-8c5b-3d7f9e1a2c4d',
-      projectSubtype: '0',
+      projectSubtype: 'PrivateDebtFinancing',
       amount: 3000000,
       dontDisclouse: false,
       landAvailable: true,
@@ -453,7 +453,7 @@ export const sampleFeeds = {
     },
     {
       projectId: 'b2c3d4e5-f6a7-48b0-9d6c-4e8a0f2b3d5e',
-      projectSubtype: '0',
+      projectSubtype: 'PrivateDebtFinancing',
       amount: 4200000,
       dontDisclouse: true,
       landAvailable: false,
@@ -461,7 +461,7 @@ export const sampleFeeds = {
     },
     {
       projectId: 'c3d4e5f6-a7b8-49c1-0e7d-5f9b1a3c4e6f',
-      projectSubtype: '1',
+      projectSubtype: 'PrivateDebtFinancing',
       amount: 5100000,
       dontDisclouse: false,
       landAvailable: true,
@@ -470,9 +470,9 @@ export const sampleFeeds = {
   ],
 
   infrastructures: [
-    { projectId: 'a1b2c3d4-e5f6-47a9-8c5b-3d7f9e1a2c4d', infrastructureType: '4', energyOutput: undefined, segment: 'UtilityScale' },
-    { projectId: 'b2c3d4e5-f6a7-48b0-9d6c-4e8a0f2b3d5e', infrastructureType: '8', energyOutput: undefined, segment: 'PMGD' },
-    { projectId: 'c3d4e5f6-a7b8-49c1-0e7d-5f9b1a3c4e6f', infrastructureType: '10', energyOutput: undefined, segment: 'UtilityScale' },
+    { projectId: 'a1b2c3d4-e5f6-47a9-8c5b-3d7f9e1a2c4d', infrastructureType: 'Bridge', energyOutput: undefined, segment: 'UtilityScale' },
+    { projectId: 'b2c3d4e5-f6a7-48b0-9d6c-4e8a0f2b3d5e', infrastructureType: 'Bridge', energyOutput: undefined, segment: 'PMGD' },
+    { projectId: 'c3d4e5f6-a7b8-49c1-0e7d-5f9b1a3c4e6f', infrastructureType: '1Bridge', energyOutput: undefined, segment: 'UtilityScale' },
   ],
 
   naturalResourcesDevelopments: [
@@ -482,9 +482,9 @@ export const sampleFeeds = {
   ],
 
   naturalResourcesFinancings: [
-    { projectId: 'a1b2c3d4-e5f6-47a9-8c5b-3d7f9e1a2c4d', projectSubtype: '0', activeType: 'Working Capital' },
-    { projectId: 'b2c3d4e5-f6a7-48b0-9d6c-4e8a0f2b3d5e', projectSubtype: '0', activeType: 'Land Acquisition' },
-    { projectId: 'c3d4e5f6-a7b8-49c1-0e7d-5f9b1a3c4e6f', projectSubtype: '1', activeType: 'Equipment' },
+    { projectId: 'a1b2c3d4-e5f6-47a9-8c5b-3d7f9e1a2c4d', projectSubtype: 'Bridge', activeType: 'Working Capital' },
+    { projectId: 'b2c3d4e5-f6a7-48b0-9d6c-4e8a0f2b3d5e', projectSubtype: 'Bridge', activeType: 'Land Acquisition' },
+    { projectId: 'c3d4e5f6-a7b8-49c1-0e7d-5f9b1a3c4e6f', projectSubtype: 'Bridge', activeType: 'Equipment' },
   ],
 
   realStates: [

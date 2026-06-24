@@ -1,6 +1,6 @@
 export enum Currency
 {
-    USD,
-    EUR,
-    CLP
+    USD = 'USD',
+    EUR = 'EUR',
+    CLP = 'CLP'
 }

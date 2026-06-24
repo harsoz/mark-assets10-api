@@ -14,7 +14,7 @@ export class ProjectDetailsService {
    */
   async getAllProjects(projectType: ProjectType) {
     const rawResults = (await this.dataSource.query(
-      'EXEC sp_getAllProjectsByType @type = @0',
+      'EXEC sp_getProjectsFilteredByType @type = @0',
       [projectType],
     )) as ProjectReadModel[];
 
@@ -34,7 +34,7 @@ export class ProjectDetailsService {
     const { sql, params } = this.buildStoredProcedureParams(request);
 
     const rawResults = (await this.dataSource.query(
-      `EXEC dbo.sp_getAllProjectsByType ${sql}`,
+      `EXEC dbo.sp_getProjectsFilteredByType ${sql}`,
       params,
     )) as ProjectReadModel[];
 
@@ -60,10 +60,10 @@ export class ProjectDetailsService {
     const { sql, params } = this.buildStoredProcedureParams(request, userId);
 
     const rawResults = (await this.dataSource.query(
-      `EXEC dbo.sp_getAllProjectsByType ${sql}`,
+      `EXEC dbo.sp_getProjectsFilteredByType ${sql}`,
       [...params],
     )) as ProjectReadModel[];
-
+    
     const data = rawResults.map((row) => ({
       ...row,
       details:
@@ -77,8 +77,8 @@ export class ProjectDetailsService {
 
   // probably moved this to collectionService
   private buildStoredProcedureParams(request: GetProjectDTO, userId?: string) {
-    let sql = '';
-    const params: any[] = [request.page ?? 1, request.pageSize ?? 0];
+    const params: any[] = [];
+    const conditions: string[] = [];
 
     // we might use the GetProjectDTO keys
     const mappings = [
@@ -111,26 +111,35 @@ export class ProjectDetailsService {
       { key: 'ppaContract', param: '@ppaContract' },
     ];
 
+    // 1. Manejar paginación como filtros opcionales
+    if (request.page !== undefined && request.page !== null) {
+      conditions.push(`@page = @${params.length}`);
+      params.push(request.page);
+    }
+
+    if (request.pageSize !== undefined && request.pageSize !== null) {
+      conditions.push(`@pageSize = @${params.length}`);
+      params.push(request.pageSize);
+    }
+
+    // 2. Mapear filtros del DTO definidos en tu arreglo 'mappings'
     mappings.forEach((m) => {
       const value = request[m.key];
       if (value !== undefined && value !== null && value !== '') {
-        sql += `, ${m.param} = @${params.length}`;
-
-        // manage type: if this gets complicated, we can separate this to another service or method
-        const paramValue = m.key === 'projectType' ? ProjectType[value as keyof typeof ProjectType] : value;
-        
-        // we need to handle @type here per projectType: it has a subtype >:v damn it
-        
-        params.push(paramValue);
-      }
-
-      // make avaliable to filter by userid
-      if (userId) {
-        sql += `, @userId = @${params.length}`;
-        params.push(userId);
+        conditions.push(`${m.param} = @${params.length}`);
+        params.push(value);
       }
     });
 
-    return { sql, params };
+    // 3. Agregar userId
+    if (userId) {
+      conditions.push(`@userId = @${params.length}`);
+      params.push(userId);
+    }
+
+    return {
+      sql: conditions.join(', '),
+      params,
+    };
   }
 }

@@ -1,6 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ProjectType } from 'src/domain/types/project.type';
-import { Asset, ConsultingArchitecture, Development, EnergyAsset, Financing, Infrastructure, NaturalResourcesDevelopment, NaturalResourcesFinancing, RealState } from 'src/infrastructure/database';
+import {
+  Asset,
+  ConsultingArchitecture,
+  Development,
+  EnergyAsset,
+  Financing,
+  Infrastructure,
+  NaturalResourcesDevelopment,
+  NaturalResourcesFinancing,
+  RealState,
+} from 'src/infrastructure/database';
 import {
   ConsultingArchitectureRepository,
   EnergyAssetRepository,
@@ -26,10 +36,10 @@ export type ProjectRegistry = {
   [ProjectType.RealState]: RealStateRepository;
 };
 
-
 @Injectable()
 export class ProjectCollectionService {
-  private readonly detailsRepos: Map<ProjectType, IBaseRepository<any, any>> = new Map();
+  private readonly detailsRepos: Map<ProjectType, IBaseRepository<any, any>> =
+    new Map();
 
   constructor(
     private readonly assetRepo: AssetRepository,
@@ -61,8 +71,10 @@ export class ProjectCollectionService {
     ]);
   }
 
-  getProjectDetailEngine<T extends ProjectType>(projectType: T): ProjectRegistry[T] {
-    const key = Number(projectType);
+  getProjectDetailEngine<T extends ProjectType>(
+    projectType: T,
+  ): ProjectRegistry[T] {
+    const key = projectType;
     const engine = this.detailsRepos.get(key);
     if (!engine) {
       throw new Error(`Engine not found for: ${projectType}`);

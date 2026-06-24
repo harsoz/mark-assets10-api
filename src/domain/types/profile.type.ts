@@ -1,6 +1,6 @@
 export enum ProfileType {
-  Agent,
-  Lawyer,
-  Analyst,
-  User
+  Agent = 'Agent',
+  Lawyer = 'Lawyer',
+  Analyst = 'Analyst',
+  User = 'User'
 }

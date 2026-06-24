@@ -1,5 +1,5 @@
 export enum MeasureUnit
     {
-        Sqft,
-        Sqm,
+        Sqft = 'Sqft',
+        Sqm = 'Sqm',
     }

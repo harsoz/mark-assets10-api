@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsInt, IsEnum, IsNumber, IsNotEmpty } from 'class-validator';
+import { IsOptional, IsString, IsInt, IsEnum, IsNumber, IsNotEmpty, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
 import { QueryParamsDTO } from '../../common/query-params.dto';
@@ -14,7 +14,7 @@ export class GetProjectDTO  extends QueryParamsDTO {
 
   @IsOptional()
   @Type(() => Boolean)
-  @IsInt()
+  @IsBoolean()
   isActive?: Boolean;
 
   @IsOptional()

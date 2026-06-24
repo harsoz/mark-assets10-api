@@ -1,7 +1,6 @@
-export enum FileType
-    {
-        File,
-        Image,
-        FileContractToApprove,
-        FileContractToPendingClose
-    }
+export enum FileType {
+    File = 'File',
+    Image = 'Image',
+    FileContractToApprove = 'FileContractToApprove',
+    FileContractToPendingClose = 'FileContractToPendingClose'
+}

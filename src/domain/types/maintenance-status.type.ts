@@ -1,6 +1,6 @@
 export enum MaintanceStatus
 {
-    MC,
-    MA,
-    MR
+    MC = 'MC',
+    MA = 'MA',
+    MR = 'MR'
 }

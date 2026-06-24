@@ -1,5 +1,5 @@
 export enum DevelopmentSubtype
 {
-    Rental,
-    Retail,
+    Rental = 'Rental',
+    Retail = 'Retail',
 }

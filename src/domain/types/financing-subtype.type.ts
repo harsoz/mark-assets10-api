@@ -1,5 +1,5 @@
 export enum FinancingSubtype
     {
-        PrivateDebtFinancing,
-        ScratchProjectFinancing,
+        PrivateDebtFinancing = 'PrivateDebtFinancing',
+        ScratchProjectFinancing = 'ScratchProjectFinancing',
     }

@@ -1,5 +1,5 @@
 export enum InfrastructureSegment
     {
-        UtilityScale,
-        PMGD
+        UtilityScale = 'UtilityScale',
+        PMGD= 'PMGD',
     }

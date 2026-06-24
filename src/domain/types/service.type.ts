@@ -1,5 +1,5 @@
 export enum ServiceType
 {
-    Architecture,
-    Consulting,
+    Architecture = 'Architecture',
+    Consulting = 'Consulting',
 }

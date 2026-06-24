@@ -1,8 +1,7 @@
-export enum MaintanceType
-{
-    Corrective,
-    Preventive,
-    Predictive,
-    Adaptive,
-    Evolution
+export enum MaintanceType {
+    Corrective = 'Corrective',
+    Preventive = 'Preventive',
+    Predictive = 'Predictive',
+    Adaptive = 'Adaptive',
+    Evolution = 'Evolution'
 }
