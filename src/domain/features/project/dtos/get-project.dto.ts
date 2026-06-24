@@ -6,7 +6,16 @@ import { QueryParamsDTO } from '../../common/query-params.dto';
 export class GetProjectDTO  extends QueryParamsDTO {
   @IsOptional()
   @IsString()
+  projectType?: string;
+
+  @IsOptional()
+  @IsString()
   type?: string;
+
+  @IsOptional()
+  @Type(() => Boolean)
+  @IsInt()
+  isActive?: Boolean;
 
   @IsOptional()
   @Type(() => Number)

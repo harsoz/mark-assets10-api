@@ -5,11 +5,14 @@ import type {
   FindOptionsWhere,
   ObjectLiteral,
   Repository,
-  SelectQueryBuilder
+  SelectQueryBuilder,
 } from 'typeorm';
 import { IBaseRepository } from './interfaces/base-repository.interface';
 
-export abstract class BaseRepository<TEntity extends ObjectLiteral, TModel> implements IBaseRepository<TEntity, TModel> {
+export abstract class BaseRepository<
+  TEntity extends ObjectLiteral,
+  TModel,
+> implements IBaseRepository<TEntity, TModel> {
   constructor(
     protected readonly repository: Repository<TEntity>,
     protected readonly primaryKey: keyof TEntity = 'id' as any,
@@ -58,6 +61,10 @@ export abstract class BaseRepository<TEntity extends ObjectLiteral, TModel> impl
 
   createQueryBuilder(alias: string): SelectQueryBuilder<TEntity> {
     return this.repository.createQueryBuilder(alias);
+  }
+
+  count(options?: FindManyOptions<TEntity>): Promise<number> {
+    return this.repository.count(options);
   }
 
   async findOne(options: FindOneOptions<TEntity>): Promise<TEntity | null> {

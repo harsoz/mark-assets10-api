@@ -14,5 +14,6 @@ export interface IBaseRepository<TEntity extends ObjectLiteral, TModel> {
   createQueryBuilder(alias: string): SelectQueryBuilder<TEntity>;
   findOne(options: FindOneOptions<TEntity>): Promise<TEntity | null>;
   findAll(options?: FindManyOptions<TEntity>): Promise<TEntity[]>;
+  count(options?: FindManyOptions<TEntity>): Promise<number> ;
   toModel(entity: TEntity): TModel;
 }

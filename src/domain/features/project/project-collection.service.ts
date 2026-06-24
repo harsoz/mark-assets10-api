@@ -26,17 +26,6 @@ export type ProjectRegistry = {
   [ProjectType.RealState]: RealStateRepository;
 };
 
-export type ProjectRegistryEntities = {
-  [ProjectType.Asset]: Asset;
-  [ProjectType.ConsultingArchitecture]: ConsultingArchitecture;
-  [ProjectType.Development]: Development;
-  [ProjectType.EnergyAsset]: EnergyAsset;
-  [ProjectType.Financing]: Financing;
-  [ProjectType.Infrastructure]: Infrastructure;
-  [ProjectType.NaturalResourcesDevelopment]: NaturalResourcesDevelopment;
-  [ProjectType.NaturalResourcesFinancing]: NaturalResourcesFinancing;
-  [ProjectType.RealState]: RealState;
-};
 
 @Injectable()
 export class ProjectCollectionService {

@@ -1,21 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import {
-  ProjectCollectionService,
-  ProjectRegistry,
-  ProjectRegistryEntities,
-} from './project-collection.service';
+import { ProjectCollectionService } from './project-collection.service';
 import { ProjectRepository } from 'src/infrastructure/repository';
 import { GetProjectDTO } from './dtos/get-project.dto';
+import { ProjectType } from 'src/domain/types/project.type';
+import { DataSource, In, Not } from 'typeorm';
+import { ProjectReadModel } from 'src/domain/models';
+import { ProjectDetailsService } from './project-details.service';
+import { ProjectStatus } from 'src/domain/types/project-status.type';
 
 @Injectable()
 export class ProjectService {
   constructor(
-    // private readonly dataSource: DataSource,
+    private readonly dataSource: DataSource,
     private readonly projectRepo: ProjectRepository,
     private readonly projectCollectionService: ProjectCollectionService,
+    private readonly projectDetailsService: ProjectDetailsService,
     // private readonly stateMachine: ProjectStateMachine,
   ) {}
 
+  /**
+   * @kind readonly data - crud operations not available for entities
+   * @returns a project by id
+   */
   async getById(id: string) {
     const project = await this.projectRepo.findById(id);
     if (!project) throw new Error('Project does not exists');
@@ -28,51 +34,90 @@ export class ProjectService {
 
     return {
       ...this.projectRepo.toModel(project),
-      ...repo.toModel(details as any),
-    };
+      details: repo.toModel(details as any),
+    } as ProjectReadModel;
   }
 
+  /**
+   * @kind readonly data - crud operations not available for entities
+   * @description we should use pagination for all
+   * @returns all projects not paginated
+   */
   async getAllProjects() {
-    const query = this.projectRepo.createQueryBuilder('project');
-    const [data, totalCount] = await query
-      .orderBy('project.createdAt', 'DESC')
-      .getManyAndCount();
+    const rawResults = (await this.dataSource.query(
+      'EXEC sp_getAllProjects',
+    )) as ProjectReadModel[];
 
-    const parsedData = data.map((project) => this.projectRepo.toModel(project));
-    return { totalCount, data: parsedData };
+    return rawResults.map((row) => ({
+      ...row,
+      details:
+        typeof row.details === 'string' ? JSON.parse(row.details) : row.details,
+    }));
   }
 
+  /**
+   * @kind readonly data - crud operations not available for entities
+   * @description we should use pagination for all
+   * @returns all projects paginated conditionally
+   */
   async getAll(request: GetProjectDTO) {
-    const query = this.projectRepo.createQueryBuilder('project');
-    const [data, totalCount] = await query
+    const { sql, params } = this.buildStoredProcedureParams(request);
+
+    const rawResults = (await this.dataSource.query(
+      `EXEC dbo.sp_getAllProjects ${sql}`,
+      params,
+    )) as ProjectReadModel[];
+
+    const data = rawResults.map((row) => ({
+      ...row,
+      details:
+        typeof row.details === 'string' ? JSON.parse(row.details) : row.details,
+    }));
+
+    const totalCount = data.length;
+
+    return { totalCount, data };
+  }
+
+  // this should query all projects for a given user
+  async getAllByUserId(request: GetProjectDTO, userId: string) {
+    const query = this.projectRepo
+      .createQueryBuilder('project')
       .orderBy('project.createdAt', 'DESC')
       .skip((request.pageSize || 0) * ((request.page || 0) - 1))
       .take(request.pageSize)
-      .getManyAndCount();
-
+      .where(
+        '(project.ownerId = :u OR project.approverId = :u OR project.clientId = :u OR project.lawyerId = :u OR project.analystId = :u)',
+        { u: userId },
+      );
+    const [data, totalCount] = await query.getManyAndCount();
     const parsedData = data.map((project) => this.projectRepo.toModel(project));
     return { totalCount, data: parsedData };
   }
 
-  //   async getAllByUserId(request: GetProjectDTO, userId: string) {
-  //     const query = this.projectRepo
-  //       .buildQuery(request)
-  //       .where(
-  //         '(project.ownerId = :u OR project.approverId = :u OR project.clientId = :u OR project.lawyerId = :u OR project.analystId = :u)',
-  //         { u: userId },
-  //       );
-  //     const [data, totalCount] = await query.getManyAndCount();
-  //     return { totalCount, data };
-  //   }
+  // get all projects of specific projecttype by user
+  async getAllProjectsByTypeAndUserId(request: GetProjectDTO, userId: string) {
+    return this.projectDetailsService.getAllByUserId(request, userId);
+  }
 
-  //   async getProjectCountByUserId(userId: string): Promise<number> {
-  //     return await this.projectRepo.count({
-  //       where: {
-  //         ownerId: userId,
-  //         status: Not(In([ProjectStatus.Closed, ProjectStatus.Cancelled])),
-  //       },
-  //     });
-  //   }
+  // get all projects count of specific projecttype by user
+  async getProjectByTypeCountByOwnerId(
+    ownerId: string,
+    projectType: string, // potentially as string
+  ): Promise<number> {
+    console.log({
+      ownerId,
+      projectType: ProjectType[projectType as keyof typeof ProjectType],
+      status: Not(In([ProjectStatus.Closed, ProjectStatus.Cancelled])),
+    });
+    return await this.projectRepo.count({
+      where: {
+        ownerId,
+        projectType: ProjectType[projectType as keyof typeof ProjectType],
+        status: Not(In([ProjectStatus.Closed, ProjectStatus.Cancelled])),
+      },
+    });
+  }
 
   //   // --- CICLO DE VIDA Y DEAL FLOW ---
   //   async cancel(projectId: string, approverId: string) {
@@ -145,4 +190,30 @@ export class ProjectService {
   //       return projects;
   //     });
   //   }
+
+  private buildStoredProcedureParams(request: GetProjectDTO) {
+    let sql = '@page = @0, @pageSize = @1';
+    const params: any[] = [request.page ?? 1, request.pageSize ?? 0];
+
+    // we might use the GetProjectDTO keys
+    const mappings = [
+      { key: 'type', param: '@type' },
+      { key: 'countryId', param: '@countryId' },
+      { key: 'stateId', param: '@stateId' },
+      { key: 'cityId', param: '@cityId' },
+      { key: 'status', param: '@status' },
+      { key: 'minPrice', param: '@minPrice' },
+      { key: 'maxPrice', param: '@maxPrice' },
+    ];
+
+    mappings.forEach((m) => {
+      const value = request[m.key];
+      if (value !== undefined && value !== null && value !== '') {
+        sql += `, ${m.param} = @${params.length}`;
+        params.push(value);
+      }
+    });
+
+    return { sql, params };
+  }
 }
