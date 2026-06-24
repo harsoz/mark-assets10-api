@@ -32,21 +32,7 @@ export class ProjectDetailsService {
    */
   async getAll(request: GetProjectDTO) {
     const { sql, params } = this.buildStoredProcedureParams(request);
-
-    const rawResults = (await this.dataSource.query(
-      `EXEC dbo.sp_getProjectsFilteredByType ${sql}`,
-      params,
-    )) as ProjectReadModel[];
-
-    const data = rawResults.map((row) => ({
-      ...row,
-      details:
-        typeof row.details === 'string' ? JSON.parse(row.details) : row.details,
-    }));
-
-    const totalCount = data.length;
-
-    return { totalCount, data };
+    return this.get(sql, params);
   }
 
   /**
@@ -56,14 +42,16 @@ export class ProjectDetailsService {
   async getAllByUserId(request: GetProjectDTO, userId: string) {
     // it seems like only valid projects are retrieved per user
     request.isActive = true;
-
     const { sql, params } = this.buildStoredProcedureParams(request, userId);
+    return this.get(sql, params);
+  }
 
+  private async get(sql: string, params: any[]) {
     const rawResults = (await this.dataSource.query(
       `EXEC dbo.sp_getProjectsFilteredByType ${sql}`,
       [...params],
     )) as ProjectReadModel[];
-    
+
     const data = rawResults.map((row) => ({
       ...row,
       details:

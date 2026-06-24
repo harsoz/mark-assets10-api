@@ -15,55 +15,43 @@ import { plainToInstance } from 'class-transformer';
 export class ProjectController {
   constructor(private readonly _projectService: ProjectService) {}
 
-  @Get('')
-  @HttpCode(HttpStatus.OK)
-  getAll(@Query() query: GetProjectDTO) {
-    // query gets a plain object
-    const request = plainToInstance(GetProjectDTO, query);
-    if (request.isPaginated()) return this._projectService.getAll(request);
-    return this._projectService.getAllProjects();
-  }
-
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   getById(@Param('id') id: string) {
     return this._projectService.getById(id);
   }
 
-  @Get('user/:userId')
+  @Get('all/:projectType')
   @HttpCode(HttpStatus.OK)
-  getAllByUserId(
-    @Query() query: GetProjectDTO,
-    @Param('userId') userId: string,
-  ) {
-    // query gets a plain object
-    const request = plainToInstance(GetProjectDTO, query);
-    return this._projectService.getAllByUserId(request, userId);
+  getAll(@Param('projectType') projectType: string) {
+    const request = new GetProjectDTO();
+    request.projectType = projectType; // this might be removed in the future
+    return this._projectService.getAll(request);
   }
 
-  @Get('user/:userId/all/:projectType')
+  @Get('all/:projectType/user/:userId')
   @HttpCode(HttpStatus.OK)
   getAllProjectsByTypeAndUserId(
-    @Query() query: GetProjectDTO,
-    @Param('userId') userId: string,
     @Param('projectType') projectType: string,
+    @Param('userId') userId: string,
+    @Query() query: GetProjectDTO,
   ) {
     // query gets a plain object
     const request = plainToInstance(GetProjectDTO, query);
 
     // override if no provided
-    request.projectType = projectType;
+    request.projectType = projectType; // this might be removed in the future
 
-    return this._projectService.getAllProjectsByTypeAndUserId(request, userId);
+    return this._projectService.getAllByUserId(request, userId);
   }
 
-  @Get('owner/:ownerId/all/:projectType/count')
+  @Get('all/:projectType/owner/:ownerId/count')
   @HttpCode(HttpStatus.OK)
-  getProjectByTypeCountByUserId(
-    @Param('ownerId') ownerId: string,
+  getProjectCountByTypeAndOwnerId(
     @Param('projectType') projectType: string,
+    @Param('ownerId') ownerId: string,
   ) {
-    return this._projectService.getProjectByTypeCountByOwnerId(
+    return this._projectService.getProjectCountByTypeAndOwnerId(
       ownerId,
       projectType,
     );

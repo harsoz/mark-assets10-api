@@ -1,17 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ProjectType } from 'src/domain/types/project.type';
 import {
-  Asset,
-  ConsultingArchitecture,
-  Development,
-  EnergyAsset,
-  Financing,
-  Infrastructure,
-  NaturalResourcesDevelopment,
-  NaturalResourcesFinancing,
-  RealState,
-} from 'src/infrastructure/database';
-import {
   ConsultingArchitectureRepository,
   EnergyAssetRepository,
   FinancingRepository,
@@ -59,14 +48,8 @@ export class ProjectCollectionService {
       [ProjectType.EnergyAsset, this.energyAssetRepo],
       [ProjectType.Financing, this.financingRepo],
       [ProjectType.Infrastructure, this.infrastructureRepo],
-      [
-        ProjectType.NaturalResourcesDevelopment,
-        this.naturalResourcesDevelopmentRepo,
-      ],
-      [
-        ProjectType.NaturalResourcesFinancing,
-        this.naturalResourcesFinancingRepo,
-      ],
+      [ProjectType.NaturalResourcesDevelopment, this.naturalResourcesDevelopmentRepo],
+      [ProjectType.NaturalResourcesFinancing, this.naturalResourcesFinancingRepo,],
       [ProjectType.RealState, this.realStateRepo],
     ]);
   }
