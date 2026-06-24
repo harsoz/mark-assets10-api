@@ -26,3 +26,5 @@ export * from './user-project.repository';
 export * from './user.repository';
 export * from './verified-phone.repository';
 export * from './permission.repository'
+export * from './asset.repository';
+export * from './development.repository';

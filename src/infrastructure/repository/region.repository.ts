@@ -12,7 +12,7 @@ export class RegionRepository extends BaseRepository<Region, RegionModel> {
     super(repo);
   }
 
-  protected toModel(entity: Region): RegionModel {
+  public toModel(entity: Region): RegionModel {
     return mapRegion(entity);
   }
 }

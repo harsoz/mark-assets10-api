@@ -12,7 +12,7 @@ export class ProjectFileRepository extends BaseRepository<ProjectFile, ProjectFi
     super(repo);
   }
 
-  protected toModel(entity: ProjectFile): ProjectFileModel {
+  public toModel(entity: ProjectFile): ProjectFileModel {
     return mapProjectFile(entity);
   }
 }

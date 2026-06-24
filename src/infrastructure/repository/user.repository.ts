@@ -12,7 +12,7 @@ export class UserRepository extends BaseRepository<User, UserModel> {
     super(repo);
   }
 
-  protected toModel(entity: User): UserModel {
+  public toModel(entity: User): UserModel {
     return mapUser(entity);
   }
 }

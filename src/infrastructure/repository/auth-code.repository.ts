@@ -12,7 +12,7 @@ export class AuthCodeRepository extends BaseRepository<AuthCode, AuthCodeModel> 
     super(repo);
   }
 
-  protected toModel(entity: AuthCode): AuthCodeModel {
+  public toModel(entity: AuthCode): AuthCodeModel {
     return mapAuthCode(entity);
   }
 }

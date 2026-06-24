@@ -12,7 +12,7 @@ export class FinancingRepository extends BaseRepository<Financing, FinancingMode
     super(repo, 'projectId');
   }
 
-  protected toModel(entity: Financing): FinancingModel {
+  public toModel(entity: Financing): FinancingModel {
     return mapFinancing(entity);
   }
 }

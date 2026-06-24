@@ -12,7 +12,7 @@ export class EmailTemplateRepository extends BaseRepository<EmailTemplate, Email
     super(repo);
   }
 
-  protected toModel(entity: EmailTemplate): EmailTemplateModel {
+  public toModel(entity: EmailTemplate): EmailTemplateModel {
     return mapEmailTemplate(entity);
   }
 }

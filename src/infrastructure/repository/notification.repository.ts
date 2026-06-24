@@ -12,7 +12,7 @@ export class NotificationRepository extends BaseRepository<Notification, Notific
     super(repo);
   }
 
-  protected toModel(entity: Notification): NotificationModel {
+  public toModel(entity: Notification): NotificationModel {
     return mapNotification(entity);
   }
 }

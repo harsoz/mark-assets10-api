@@ -12,7 +12,7 @@ export class InfrastructureRepository extends BaseRepository<Infrastructure, Inf
     super(repo, 'projectId');
   }
 
-  protected toModel(entity: Infrastructure): InfrastructureModel {
+  public toModel(entity: Infrastructure): InfrastructureModel {
     return mapInfrastructure(entity);
   }
 }

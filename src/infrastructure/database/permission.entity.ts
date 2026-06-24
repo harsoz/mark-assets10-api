@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Role } from './role.entity';
 
-@Entity()
+@Entity('permissions')
 export class Permission {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -15,4 +15,5 @@ export class Permission {
   @ManyToOne(() => Role, (role) => role.permissions)
   @JoinColumn({ name: 'roleId' })
   role?: Role;
+  
 }

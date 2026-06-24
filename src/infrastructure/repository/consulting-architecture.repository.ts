@@ -12,7 +12,7 @@ export class ConsultingArchitectureRepository extends BaseRepository<ConsultingA
     super(repo, 'projectId');
   }
 
-  protected toModel(entity: ConsultingArchitecture): ConsultingArchitectureModel {
+  public toModel(entity: ConsultingArchitecture): ConsultingArchitectureModel {
     return mapConsultingArchitecture(entity);
   }
 }

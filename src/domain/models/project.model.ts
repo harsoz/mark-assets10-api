@@ -67,6 +67,13 @@ export interface ConsultingArchitectureModel extends ChildProjectModel {
   landAvailable?: boolean;
 }
 
+export interface AssetModel extends ChildProjectModel {
+  assetType?: string;
+  quantity?: number;
+  landArea?: number;
+  capRate?: string;
+}
+
 export interface DevelopmentModel extends ChildProjectModel {
   projectSubtype?: DevelopmentSubtype;
   landAvailable?: boolean;

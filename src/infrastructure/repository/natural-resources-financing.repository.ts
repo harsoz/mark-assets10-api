@@ -12,7 +12,7 @@ export class NaturalResourcesFinancingRepository extends BaseRepository<NaturalR
     super(repo, 'projectId');
   }
 
-  protected toModel(entity: NaturalResourcesFinancing): NaturalResourcesFinancingModel {
+  public toModel(entity: NaturalResourcesFinancing): NaturalResourcesFinancingModel {
     return mapNaturalResourcesFinancing(entity);
   }
 }

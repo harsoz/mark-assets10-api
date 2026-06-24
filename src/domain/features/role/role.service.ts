@@ -21,7 +21,8 @@ export class RoleService {
 
   async getAll() {
     const roles = await this.roleRepo.findAll();
-    return { totalCount: roles.length, data: roles };
+    const parsedData = roles.map((r) => this.roleRepo.toModel(r));
+    return { totalCount: roles.length, data: parsedData };
   }
 
   async getRole(roleId: string) {
@@ -31,7 +32,7 @@ export class RoleService {
     const permissions = await this.roleManager.getPermissions(role as Role);
     
     return {
-      ...role,
+      ...this.roleRepo.toModel(role),
       permissions
     };
   }
@@ -39,7 +40,8 @@ export class RoleService {
   async getManagementRoles() {
     const allRoles = await this.roleRepo.findAll();
     const managementRoles = allRoles.filter(r => r.name && ['Admin', 'Manager'].includes(r.name)); 
-    return { totalCount: managementRoles.length, data: managementRoles };
+    const parsedData = managementRoles.map((r) => this.roleRepo.toModel(r));
+    return { totalCount: managementRoles.length, data: parsedData };
   }
 
   async get(request: GetRoleDTO) {
@@ -56,7 +58,7 @@ export class RoleService {
 
     const mappedRoles = await Promise.all(data.map(async (role) => {
       const permissions = await this.roleManager.getPermissions(role);
-      return { ...role, permissions };
+      return { ...this.roleRepo.toModel(role), permissions };
     }));
 
     return { totalCount, data: mappedRoles };
@@ -71,7 +73,7 @@ export class RoleService {
     for (const permission of request.permissions ||[]) {
       await this.roleManager.addPermission(role.id, permission);
     }
-    return role;
+    return this.roleRepo.toModel(role);
   }
 
   async update(request: UpdateRoleDTO, roleId: string) {

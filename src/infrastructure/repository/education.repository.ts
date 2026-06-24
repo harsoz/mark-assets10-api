@@ -12,7 +12,7 @@ export class EducationRepository extends BaseRepository<Education, EducationMode
     super(repo);
   }
 
-  protected toModel(entity: Education): EducationModel {
+  public toModel(entity: Education): EducationModel {
     return mapEducation(entity);
   }
 }

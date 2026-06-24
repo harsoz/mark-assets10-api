@@ -12,7 +12,7 @@ export class ProfessionalExperienceRepository extends BaseRepository<Professiona
     super(repo);
   }
 
-  protected toModel(entity: ProfessionalExperience): ProfessionalExperienceModel {
+  public toModel(entity: ProfessionalExperience): ProfessionalExperienceModel {
     return mapProfessionalExperience(entity);
   }
 }

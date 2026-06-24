@@ -12,7 +12,7 @@ export class RealStateRepository extends BaseRepository<RealState, RealStateMode
     super(repo, 'projectId');
   }
 
-  protected toModel(entity: RealState): RealStateModel {
+  public toModel(entity: RealState): RealStateModel {
     return mapRealState(entity);
   }
 }

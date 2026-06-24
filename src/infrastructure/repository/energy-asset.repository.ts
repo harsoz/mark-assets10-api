@@ -12,7 +12,7 @@ export class EnergyAssetRepository extends BaseRepository<EnergyAsset, EnergyAss
     super(repo, 'projectId');
   }
 
-  protected toModel(entity: EnergyAsset): EnergyAssetModel {
+  public toModel(entity: EnergyAsset): EnergyAssetModel {
     return mapEnergyAsset(entity);
   }
 }

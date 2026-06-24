@@ -20,13 +20,13 @@ export class LocationService {
     return { totalCount: data.length, data: parsedData };
   }
 
-  async getStates(countryId: number) {
+  async getStatesByCountryId(countryId: number) {
     const data = await this._stateRepo.findAll({ where: { countryId } });
     const parsedData = data.map((c) => this._stateRepo.toModel(c));
     return { totalCount: data.length, data: parsedData };
   }
 
-  async getCities(stateId: number) {
+  async getCitiesByStateId(stateId: number) {
     const data = await this._cityRepo.findAll({ where: { stateId } });
     const parsedData = data.map((c) => this._cityRepo.toModel(c));
     return { totalCount: data.length, data: parsedData };

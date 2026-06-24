@@ -29,3 +29,4 @@ export * from './projects/infrastructure.entity';
 export * from './projects/natural-resources-development.entity';
 export * from './projects/natural-resources-financing.entity';
 export * from './projects/real-state.entity';
+export * from './projects/asset.entity';

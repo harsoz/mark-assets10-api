@@ -21,7 +21,7 @@ export class PermissionRepository extends BaseRepository<Permission, PermissionM
     await this.repository.delete({ roleId, value });
   }
 
-  protected toModel(permission: Permission): PermissionModel {
+  public toModel(permission: Permission): PermissionModel {
       return mapPermission(permission);
   }
 }

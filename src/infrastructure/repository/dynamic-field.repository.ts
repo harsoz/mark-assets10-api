@@ -12,7 +12,7 @@ export class DynamicFieldRepository extends BaseRepository<DynamicField, Dynamic
     super(repo);
   }
 
-  protected toModel(entity: DynamicField): DynamicFieldModel {
+  public toModel(entity: DynamicField): DynamicFieldModel {
     return mapDynamicField(entity);
   }
 }

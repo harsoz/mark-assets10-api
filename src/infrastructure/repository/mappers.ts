@@ -1,4 +1,4 @@
-import type { AuthCodeModel, CityModel, CountryModel, ConsultingArchitectureModel, DataUserProfileModel, DevelopmentModel, DynamicFieldModel, EmailTemplateModel, EnergyAssetModel, FinancingModel, InfrastructureModel, NaturalResourcesDevelopmentModel, NaturalResourcesFinancingModel, NotificationModel, ProjectFileModel, ProjectModel, RealStateModel, RegionModel, RoleModel, StateModel, SubRegionModel, TrustedDeviceModel, UserModel, UserDynamicFieldModel, UserProjectModel, VerifiedPhoneModel, EducationModel, ProfessionalExperienceModel } from 'src/domain/models';
+import type { AuthCodeModel, CityModel, CountryModel, ConsultingArchitectureModel, DataUserProfileModel, DevelopmentModel, DynamicFieldModel, EmailTemplateModel, EnergyAssetModel, FinancingModel, InfrastructureModel, NaturalResourcesDevelopmentModel, NaturalResourcesFinancingModel, NotificationModel, ProjectFileModel, ProjectModel, RealStateModel, RegionModel, RoleModel, StateModel, SubRegionModel, TrustedDeviceModel, UserModel, UserDynamicFieldModel, UserProjectModel, VerifiedPhoneModel, EducationModel, ProfessionalExperienceModel, AssetModel } from 'src/domain/models';
 import type { AuthCode } from 'src/infrastructure/database/authcode.entity';
 import type { City } from 'src/infrastructure/database/city.entity';
 import type { Country } from 'src/infrastructure/database/country.entity';
@@ -27,8 +27,9 @@ import type { VerifiedPhone } from 'src/infrastructure/database/verified-phone.e
 import type { Education } from 'src/infrastructure/database/education.entity';
 import type { ProfessionalExperience } from 'src/infrastructure/database/professional-experience.entity';
 import type { Notification } from 'src/infrastructure/database/notification.entity';
-import { Permission } from '../database';
+import { Asset, Permission } from '../database';
 import { PermissionModel } from 'src/domain/models/permission.model';
+import { AssetType } from 'src/domain/types/asset.type';
 
 export function mapCountry(entity: Country): CountryModel {
   return {
@@ -457,5 +458,15 @@ export function mapPermission(entity: Permission): PermissionModel {
     id: entity.id,
     roleId: entity.roleId,
     value: entity.value
+  };
+}
+
+export function mapAsset(entity: Asset): AssetModel {
+  return {
+    projectId: entity.projectId,
+    assetType: AssetType[entity.assetType],
+    quantity: entity.quantity,
+    landArea: entity.landArea,
+    capRate: entity.capRate,
   };
 }

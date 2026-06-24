@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Role } from 'src/infrastructure/database';
+import { Permission, Role } from 'src/infrastructure/database';
 import { RoleRepository } from 'src/infrastructure/repository';
 import { PermissionRepository } from 'src/infrastructure/repository/permission.repository';
 

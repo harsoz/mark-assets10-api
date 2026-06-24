@@ -5,9 +5,11 @@ import type {
   FindOptionsWhere,
   ObjectLiteral,
   Repository,
+  SelectQueryBuilder
 } from 'typeorm';
+import { IBaseRepository } from './interfaces/base-repository.interface';
 
-export abstract class BaseRepository<TEntity extends ObjectLiteral, TModel> {
+export abstract class BaseRepository<TEntity extends ObjectLiteral, TModel> implements IBaseRepository<TEntity, TModel> {
   constructor(
     protected readonly repository: Repository<TEntity>,
     protected readonly primaryKey: keyof TEntity = 'id' as any,
@@ -54,7 +56,7 @@ export abstract class BaseRepository<TEntity extends ObjectLiteral, TModel> {
     await this.repository.delete(this.buildPrimaryKeyCriteria(id) as any);
   }
 
-  createQueryBuilder(alias: string) {
+  createQueryBuilder(alias: string): SelectQueryBuilder<TEntity> {
     return this.repository.createQueryBuilder(alias);
   }
 
@@ -67,5 +69,5 @@ export abstract class BaseRepository<TEntity extends ObjectLiteral, TModel> {
     return entities;
   }
 
-  protected abstract toModel(entity: TEntity): TModel;
+  abstract toModel(entity: TEntity): TModel;
 }

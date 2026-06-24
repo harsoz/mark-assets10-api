@@ -12,7 +12,7 @@ export class TrustedDeviceRepository extends BaseRepository<TrustedDevice, Trust
     super(repo);
   }
 
-  protected toModel(entity: TrustedDevice): TrustedDeviceModel {
+  public toModel(entity: TrustedDevice): TrustedDeviceModel {
     return mapTrustedDevice(entity);
   }
 }

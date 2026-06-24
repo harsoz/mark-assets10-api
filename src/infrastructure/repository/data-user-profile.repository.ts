@@ -12,7 +12,7 @@ export class DataUserProfileRepository extends BaseRepository<DataUserProfile, D
     super(repo);
   }
 
-  protected toModel(entity: DataUserProfile): DataUserProfileModel {
+  public toModel(entity: DataUserProfile): DataUserProfileModel {
     return mapDataUserProfile(entity);
   }
 }

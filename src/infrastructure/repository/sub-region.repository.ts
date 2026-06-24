@@ -12,7 +12,7 @@ export class SubRegionRepository extends BaseRepository<SubRegion, SubRegionMode
     super(repo);
   }
 
-  protected toModel(entity: SubRegion): SubRegionModel {
+  public toModel(entity: SubRegion): SubRegionModel {
     return mapSubRegion(entity);
   }
 }

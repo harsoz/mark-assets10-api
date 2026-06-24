@@ -12,7 +12,7 @@ export class RoleRepository extends BaseRepository<Role, RoleModel> {
     super(repo);
   }
 
-  protected toModel(entity: Role): RoleModel {
+  public toModel(entity: Role): RoleModel {
     return mapRole(entity);
   }
 }

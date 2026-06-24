@@ -12,7 +12,7 @@ export class VerifiedPhoneRepository extends BaseRepository<VerifiedPhone, Verif
     super(repo);
   }
 
-  protected toModel(entity: VerifiedPhone): VerifiedPhoneModel {
+  public toModel(entity: VerifiedPhone): VerifiedPhoneModel {
     return mapVerifiedPhone(entity);
   }
 }
