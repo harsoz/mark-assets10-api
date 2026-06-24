@@ -16,19 +16,26 @@ export class LocationService {
 
   async getAllCountries() {
     const data = await this._countryRepo.findAll();
-    return { totalCount: data.length, data };
+    const parsedData = data.map((c) => this._countryRepo.toModel(c));
+    return { totalCount: data.length, data: parsedData };
   }
 
   async getStates(countryId: number) {
     const data = await this._stateRepo.findAll({ where: { countryId } });
-    return { totalCount: data.length, data };
+    const parsedData = data.map((c) => this._stateRepo.toModel(c));
+    return { totalCount: data.length, data: parsedData };
   }
 
   async getCities(stateId: number) {
     const data = await this._cityRepo.findAll({ where: { stateId } });
-    return { totalCount: data.length, data };
+    const parsedData = data.map((c) => this._cityRepo.toModel(c));
+    return { totalCount: data.length, data: parsedData };
   }
 
+  /**
+   * @deprecated
+   * This method is potentially no longer used
+   */
   async getAllCities(request: GetRestrictedUserDTO) {
     const query = this._cityRepo.createQueryBuilder('city');
 
@@ -56,9 +63,7 @@ export class LocationService {
     }
 
     const [data, totalCount] = await query.getManyAndCount();
-
-    const result = data.map((location) => this._cityRepo.toModel(location));
-
-    return { totalCount, data: result };
+    const parsedData = data.map((location) => this._cityRepo.toModel(location));
+    return { totalCount, data: parsedData };
   }
 }

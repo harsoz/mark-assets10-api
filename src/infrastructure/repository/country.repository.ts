@@ -12,7 +12,7 @@ export class CountryRepository extends BaseRepository<Country, CountryModel> {
     super(repo);
   }
 
-  protected toModel(entity: Country): CountryModel {
+  public toModel(entity: Country): CountryModel {
     return mapCountry(entity);
   }
 }

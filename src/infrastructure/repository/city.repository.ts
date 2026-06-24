@@ -12,7 +12,7 @@ export class CityRepository extends BaseRepository<City, CityModel> {
     super(repo);
   }
 
-  toModel(entity: City): CityModel {
+  public toModel(entity: City): CityModel {
     return mapCity(entity);
   }
 }
