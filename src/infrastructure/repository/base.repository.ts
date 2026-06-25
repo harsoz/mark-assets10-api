@@ -63,7 +63,7 @@ export abstract class BaseRepository<
     return this.repository.createQueryBuilder(alias);
   }
 
-  count(options?: FindManyOptions<TEntity>): Promise<number> {
+  async count(options?: FindManyOptions<TEntity>): Promise<number> {
     return this.repository.count(options);
   }
 

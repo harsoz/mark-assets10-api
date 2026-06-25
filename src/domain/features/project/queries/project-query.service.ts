@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { GetProjectDTO } from './dtos/get-project.dto';
+import { GetProjectDTO } from '../dtos/get-project.dto';
 import { ProjectType } from 'src/domain/types/project.type';
 import { DataSource } from 'typeorm';
 import { ProjectReadModel } from 'src/domain/models';
 
 @Injectable()
-export class ProjectDetailsService {
+export class ProjectQueryService {
   constructor(private readonly dataSource: DataSource) {}
 
   /**

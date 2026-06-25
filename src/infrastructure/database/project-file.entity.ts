@@ -5,12 +5,11 @@ import { Project } from './projects/project.entity';
 
 @Entity('project_files')
 export class ProjectFile extends BaseEntity {
-  
   @Column({ type: 'varchar', length: 40 })
   type!: FileType;
 
   @Column()
-  file!: string; 
+  file!: string;
 
   @Column()
   fileName!: string;
@@ -18,7 +17,10 @@ export class ProjectFile extends BaseEntity {
   @Column({ type: 'uuid', nullable: false })
   projectId!: string;
 
-  @ManyToOne(() => Project, (project) => project.projectFiles)
+  @ManyToOne(() => Project, (project) => project.projectFiles, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'projectId' })
   project!: Project;
 }

@@ -4,16 +4,19 @@ import { ProjectRepository } from 'src/infrastructure/repository';
 import { GetProjectDTO } from './dtos/get-project.dto';
 import { ProjectType } from 'src/domain/types/project.type';
 import { In, Not } from 'typeorm';
-import { ProjectReadModel } from 'src/domain/models';
-import { ProjectDetailsService } from './project-details.service';
+import { ProjectFileModel, ProjectReadModel } from 'src/domain/models';
+import { ProjectQueryService } from './queries/project-query.service';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
+import { CommandManagerService } from './commands/command-manager.service';
+import { Multer } from 'multer';
 
 @Injectable()
 export class ProjectService {
   constructor(
     private readonly projectRepo: ProjectRepository,
     private readonly projectCollectionService: ProjectCollectionService,
-    private readonly projectDetailsService: ProjectDetailsService,
+    private readonly queryService: ProjectQueryService,
+    private readonly commandManager: CommandManagerService,
     // private readonly stateMachine: ProjectStateMachine,
   ) {}
 
@@ -44,7 +47,7 @@ export class ProjectService {
    * @returns all projects
    */
   async getAll(request: GetProjectDTO) {
-    return this.projectDetailsService.getAll(request);
+    return this.queryService.getAll(request);
   }
 
   /**
@@ -53,7 +56,7 @@ export class ProjectService {
    * @returns all projects of a user
    */
   async getAllByUserId(request: GetProjectDTO, userId: string) {
-    return this.projectDetailsService.getAllByUserId(request, userId);
+    return this.queryService.getAllByUserId(request, userId);
   }
 
   /**
@@ -74,102 +77,76 @@ export class ProjectService {
     });
   }
 
-  //   // --- CICLO DE VIDA Y DEAL FLOW ---
-  //   async cancel(projectId: string, approverId: string) {
-  //     const project = await this.projectRepo.findOneBy({ id: projectId });
-  //     if (!project) throw new ProjectDoesNotExistException();
+  async create(
+    projectType: ProjectType,
+    project: any,
+    ownerId: string,
+    files: Multer.File[],
+  ) {
+    const command = this.commandManager.getCommand(projectType);
 
-  //     if (
-  //       !this.stateMachine.canTransition(project.status, ProjectStatus.Cancelled)
-  //     )
-  //       throw new InvalidStatusChangeException();
+    if (!command) throw new Error(`Command not found for: ${projectType}`);
 
-  //     project.status = ProjectStatus.Cancelled;
-  //     return await this.projectRepo.save(project);
-  //   }
+    return await command.create(project, ownerId, files);
+  }
 
-  //   async pendingCloseDeal(projectId: string, contractorId: string) {
-  //     const project = await this.projectRepo.findOneBy({ id: projectId });
-  //     if (!project) throw new ProjectDoesNotExistException();
+  async cancel(
+    projectType: ProjectType,
+    projectId: string,
+    approverId: string,
+  ) {
+    const command = this.commandManager.getCommand(projectType);
 
-  //     project.status = ProjectStatus.PendingClosed;
-  //     project.clientId = contractorId;
-  //     return await this.projectRepo.save(project);
-  //   }
+    if (!command) throw new Error(`Command not found for: ${projectType}`);
 
-  //   async rejectDeal(projectId: string) {
-  //     const project = await this.projectRepo.findOneBy({ id: projectId });
-  //     project.status = ProjectStatus.Rejected;
-  //     project.clientId = null;
-  //     return await this.projectRepo.save(project);
-  //   }
+    return await command.cancel(projectId, approverId);
+  }
 
-  //   // --- MANTENIMIENTO Y EXPIRACIÓN ---
-  //   async expire(expireDays: number) {
-  //     const threshold = new Date();
-  //     threshold.setDate(threshold.getDate() - expireDays);
+  async pendingCloseDeal(
+    projectType: ProjectType,
+    projectId: string,
+    buyerId: string,
+  ) {
+    const command = this.commandManager.getCommand(projectType);
 
-  //     const query = this.projectRepo
-  //       .createQueryBuilder('p')
-  //       .where('p.status = :s AND p.updatedAt <= :t', {
-  //         s: ProjectStatus.Approved,
-  //         t: threshold,
-  //       });
+    if (!command) throw new Error(`Command not found for: ${projectType}`);
 
-  //     const projects = await query.getMany();
-  //     await query.update().set({ status: ProjectStatus.Expired }).execute();
-  //     return projects;
-  //   }
+    return await command.pendingCloseDeal(projectId, buyerId);
+  }
 
-  //   async delete(projectId: string) {
-  //     return await this.dataSource.transaction(async (manager) => {
-  //       await manager.delete(ProjectFile, { projectId });
-  //       await manager.delete(Project, projectId);
-  //       return true;
-  //     });
-  //   }
+  async rejectDeal(projectType: ProjectType, projectId: string) {
+    const command = this.commandManager.getCommand(projectType);
 
-  //   async deleteByDays(expireDays: number, statusToDelete: ProjectStatus[]) {
-  //     const threshold = new Date();
-  //     threshold.setDate(threshold.getDate() - expireDays);
+    if (!command) throw new Error(`Command not found for: ${projectType}`);
 
-  //     return await this.dataSource.transaction(async (manager) => {
-  //       const projects = await manager.find(Project, {
-  //         where: { status: In(statusToDelete), updatedAt: LessThan(threshold) },
-  //       });
+    return await command.rejectDeal(projectId);
+  }
 
-  //       const ids = projects.map((p) => p.id);
-  //       await manager.delete(ProjectFile, { projectId: In(ids) });
-  //       await manager.delete(Project, { id: In(ids) });
+  async expire(projectType: ProjectType, expireDays: number) {
+    const command = this.commandManager.getCommand(projectType);
 
-  //       return projects;
-  //     });
-  //   }
+    if (!command) throw new Error(`Command not found for: ${projectType}`);
 
-  // maybe deprecated
-  // private buildStoredProcedureParams(request: GetProjectDTO) {
-  //   let sql = '@page = @0, @pageSize = @1';
-  //   const params: any[] = [request.page ?? 1, request.pageSize ?? 0];
+    return await command.expire(expireDays);
+  }
 
-  //   // we might use the GetProjectDTO keys
-  //   const mappings = [
-  //     { key: 'type', param: '@type' },
-  //     { key: 'countryId', param: '@countryId' },
-  //     { key: 'stateId', param: '@stateId' },
-  //     { key: 'cityId', param: '@cityId' },
-  //     { key: 'status', param: '@status' },
-  //     { key: 'minPrice', param: '@minPrice' },
-  //     { key: 'maxPrice', param: '@maxPrice' },
-  //   ];
+  async delete(projectType: ProjectType, projectId: string) {
+    const command = this.commandManager.getCommand(projectType);
 
-  //   mappings.forEach((m) => {
-  //     const value = request[m.key];
-  //     if (value !== undefined && value !== null && value !== '') {
-  //       sql += `, ${m.param} = @${params.length}`;
-  //       params.push(value);
-  //     }
-  //   });
+    if (!command) throw new Error(`Command not found for: ${projectType}`);
 
-  //   return { sql, params };
-  // }
+    return await command.delete(projectId);
+  }
+
+  async deleteByDays(
+    projectType: ProjectType,
+    expireDays: number,
+    statusToDelete: ProjectStatus[],
+  ) {
+    const command = this.commandManager.getCommand(projectType);
+
+    if (!command) throw new Error(`Command not found for: ${projectType}`);
+
+    return await command.deleteByDays(expireDays, statusToDelete);
+  }
 }

@@ -3,11 +3,20 @@ import { ProjectController } from './project.controller';
 import { ProjectService } from './project.service';
 import { ProjectCollectionService } from './project-collection.service';
 import { RepositoryModule } from 'src/infrastructure/repository/repository.model';
-import { ProjectDetailsService } from './project-details.service';
+import { ProjectQueryService } from './queries/project-query.service';
+import { CommandManagerService } from './commands/command-manager.service';
+import { AssetCommandService } from './commands/asset-command.service';
 
 @Module({
   imports: [RepositoryModule],
   controllers: [ProjectController],
-  providers: [ProjectCollectionService, ProjectDetailsService, ProjectService],
+  providers: [
+    ProjectCollectionService,
+    AssetCommandService,
+    
+    CommandManagerService,
+    ProjectQueryService,
+    ProjectService,
+  ],
 })
 export class ProjectModule {}

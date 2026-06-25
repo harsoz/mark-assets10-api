@@ -5,11 +5,18 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Post,
   Query,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { GetProjectDTO } from './dtos/get-project.dto';
 import { plainToInstance } from 'class-transformer';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { Multer } from 'multer';
+import { ProjectType } from 'src/domain/types/project.type';
+import { CreateDTO } from './dtos/create.dto';
 
 @Controller('v1/projects/')
 export class ProjectController {
@@ -56,4 +63,26 @@ export class ProjectController {
       projectType,
     );
   }
+
+
+  @Post(':projectType/:ownerId')
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'files', maxCount: 20 }]))
+  async createAsset(
+    @Param('ownerId') ownerId: string,
+    @Param('projectType') projectType: string, // probably string
+    @Body() payload: CreateDTO,
+    @UploadedFiles() files: Multer.File[],
+  ) {
+
+    const project = payload[projectType as keyof typeof payload];
+
+    return this._projectService.create(
+      projectType as ProjectType,
+      project,
+      ownerId,
+      files,
+    );
+  }
+
+  
 }
