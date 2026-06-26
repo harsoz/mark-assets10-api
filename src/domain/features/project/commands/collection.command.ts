@@ -46,4 +46,8 @@ export class CommandCollection {
   getCommand(projectType: ProjectType) {
     return this._collection.get(projectType);
   }
+
+  getCommandCollection(){
+    return this._collection;
+  }
 }

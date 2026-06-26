@@ -34,5 +34,6 @@ import { RealStateCommand } from './commands/real-state.command';
     ProjectQueryService,
     ProjectService,
   ],
+  exports: [CommandCollection]
 })
 export class ProjectModule {}

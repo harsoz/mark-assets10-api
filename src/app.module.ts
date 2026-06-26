@@ -6,6 +6,8 @@ import { UserModule } from './domain/features/user/user.module';
 import { RoleModule } from './domain/features/role/role.module';
 import { LocationModule } from './domain/features/location/location.module';
 import { ProjectModule } from './domain/features/project/project.module';
+import { JobModule } from './domain/features/job/job.module';
+import { DynamicFieldModule } from './domain/features/dynamic-field/dynamic-field.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { ProjectModule } from './domain/features/project/project.module';
     RoleModule,
     LocationModule,
     ProjectModule,
+    JobModule,
+    DynamicFieldModule
   ],
   controllers: [AppController],
   providers: [],

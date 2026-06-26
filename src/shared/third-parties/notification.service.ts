@@ -8,7 +8,7 @@ export class NotificationService {
 
   constructor(private readonly httpService: HttpService) {}
 
-  async pushProjectNotification(
+  async pushtNotification(
     user: any,
     project: any,
     type: string,
@@ -54,7 +54,7 @@ export class NotificationService {
     }
   }
 
-  async pushActionNotification(
+  async pushAction(
     user: any,
     type: string,
     socketsTo: string[],
