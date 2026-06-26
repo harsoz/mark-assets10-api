@@ -1,11 +1,15 @@
 import {
   Body,
   Controller,
+  FileTypeValidator,
   Get,
   HttpCode,
   HttpStatus,
+  MaxFileSizeValidator,
   Param,
+  ParseFilePipe,
   Post,
+  Put,
   Query,
   UploadedFiles,
   UseInterceptors,
@@ -14,9 +18,10 @@ import { ProjectService } from './project.service';
 import { GetProjectDTO } from './dtos/get-project.dto';
 import { plainToInstance } from 'class-transformer';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { Multer } from 'multer';
 import { ProjectType } from 'src/domain/types/project.type';
 import { CreateDTO } from './dtos/create.dto';
+import type { FilesDTO } from './dtos/file.dto';
+import { UpdateDTO } from './dtos/update.dto';
 
 @Controller('v1/projects/')
 export class ProjectController {
@@ -52,28 +57,22 @@ export class ProjectController {
     return this._projectService.getAllByUserId(request, userId);
   }
 
-  @Get('all/:projectType/owner/:ownerId/count')
-  @HttpCode(HttpStatus.OK)
-  getProjectCountByTypeAndOwnerId(
-    @Param('projectType') projectType: string,
-    @Param('ownerId') ownerId: string,
-  ) {
-    return this._projectService.getProjectCountByTypeAndOwnerId(
-      ownerId,
-      projectType,
-    );
-  }
-
-
   @Post(':projectType/:ownerId')
   @UseInterceptors(FileFieldsInterceptor([{ name: 'files', maxCount: 20 }]))
-  async createAsset(
+  async create(
     @Param('ownerId') ownerId: string,
     @Param('projectType') projectType: string, // probably string
     @Body() payload: CreateDTO,
-    @UploadedFiles() files: Multer.File[],
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          // 5MB we probably need to address the file in chunks in the future
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 }),
+        ],
+      }),
+    )
+    files: FilesDTO, // files cannot be part of the dto in. nestjs
   ) {
-
     const project = payload[projectType as keyof typeof payload];
 
     return this._projectService.create(
@@ -84,5 +83,29 @@ export class ProjectController {
     );
   }
 
-  
+  @Put(':projectType/:ownerId')
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'files', maxCount: 20 }]))
+  async update(
+    @Param('ownerId') ownerId: string,
+    @Param('projectType') projectType: string, // probably string
+    @Body() payload: UpdateDTO,
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          // 5MB we probably need to address the file in chunks in the future
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 }),
+        ],
+      }),
+    )
+    files: FilesDTO, // files cannot be part of the dto in. nestjs
+  ) {
+    const project = payload[projectType as keyof typeof payload];
+
+    return this._projectService.update(
+      projectType as ProjectType,
+      project,
+      ownerId,
+      files,
+    );
+  }
 }

@@ -1,12 +1,19 @@
-import { IsEnum, IsOptional, IsInt, IsNumber, Min, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsOptional,
+  IsInt,
+  IsNumber,
+  Min,
+  IsString,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { AssetType } from 'src/domain/types/asset.type';
 import { DevelopmentSubtype } from 'src/domain/types/development-subtype.type';
 import { ServiceType } from 'src/domain/types/service.type';
 import { ProjectDTO } from './project.dto';
 
+// we might split this in the future
 export class CreateAssetDTO extends ProjectDTO {
-  
   @IsEnum(AssetType)
   assetType: AssetType = AssetType.House;
 
@@ -27,8 +34,10 @@ export class CreateAssetDTO extends ProjectDTO {
   capRate?: string;
 }
 
+// just change the name to update, according to the legacy code
+export class UpdateAssetDTO extends CreateAssetDTO {}
+
 export class CreateConsultingArchitectureDTO extends ProjectDTO {
-  
   @IsOptional()
   @IsEnum(DevelopmentSubtype)
   projectSubtype?: DevelopmentSubtype;
@@ -41,3 +50,5 @@ export class CreateConsultingArchitectureDTO extends ProjectDTO {
   @IsString()
   landAvailable?: string;
 }
+
+export class UpdateConsultingArchitectureDTO extends CreateConsultingArchitectureDTO {}

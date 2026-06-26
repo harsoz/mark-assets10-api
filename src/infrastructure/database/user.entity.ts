@@ -1,15 +1,15 @@
-import { 
-  Entity, 
-  PrimaryGeneratedColumn, 
-  Column, 
-  CreateDateColumn, 
-  UpdateDateColumn, 
-  ManyToMany, 
-  JoinTable, 
-  OneToMany, 
-  ManyToOne, 
-  OneToOne, 
-  JoinColumn 
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+  ManyToOne,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { LanguageType } from '../../domain/types/language.type';
 import { UserStatus } from '../../domain/types/user-status.type';
@@ -23,10 +23,10 @@ import { City } from './city.entity';
 import { VerifiedPhone } from './verified-phone.entity';
 import { UserDynamicField } from './user-dynamic-field.entity';
 import { TrustedDevice } from './trusted-device.entity';
+import { ProfileType } from 'src/domain/types/profile.type';
 
-@Entity('users') 
+@Entity('users')
 export class User {
-
   @PrimaryGeneratedColumn('uuid')
   id: string = '';
 
@@ -40,7 +40,7 @@ export class User {
   name: string = '';
 
   @Column({ default: '' })
-  password: string = ''; 
+  password: string = '';
 
   @Column({ default: '' })
   phoneVerificationCode: string = '';
@@ -90,8 +90,11 @@ export class User {
   @Column({ type: 'varchar', length: 24, enum: LanguageType, nullable: true })
   language: LanguageType = LanguageType.ES;
 
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  profileType?: ProfileType;
+
   @ManyToMany(() => Role)
-  @JoinTable({ name: 'user_roles' }) 
+  @JoinTable({ name: 'user_roles' })
   roles?: Role[];
 
   @OneToMany(() => ProfessionalExperience, (exp) => exp.user)

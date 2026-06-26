@@ -3,12 +3,11 @@ import { ProjectCollectionService } from './project-collection.service';
 import { ProjectRepository } from 'src/infrastructure/repository';
 import { GetProjectDTO } from './dtos/get-project.dto';
 import { ProjectType } from 'src/domain/types/project.type';
-import { In, Not } from 'typeorm';
 import { ProjectFileModel, ProjectReadModel } from 'src/domain/models';
 import { ProjectQueryService } from './queries/project-query.service';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
-import { CommandManagerService } from './commands/command-manager.service';
-import { Multer } from 'multer';
+import { FilesDTO } from './dtos/file.dto';
+import { CommandCollection } from './commands/collection.command';
 
 @Injectable()
 export class ProjectService {
@@ -16,7 +15,7 @@ export class ProjectService {
     private readonly projectRepo: ProjectRepository,
     private readonly projectCollectionService: ProjectCollectionService,
     private readonly queryService: ProjectQueryService,
-    private readonly commandManager: CommandManagerService,
+    private readonly commandCollection: CommandCollection,
     // private readonly stateMachine: ProjectStateMachine,
   ) {}
 
@@ -59,35 +58,30 @@ export class ProjectService {
     return this.queryService.getAllByUserId(request, userId);
   }
 
-  /**
-   * @param request
-   * @param userId
-   * @returns project count by type that belongs an owner
-   */
-  async getProjectCountByTypeAndOwnerId(
-    ownerId: string,
-    projectType: string, // potentially as string
-  ): Promise<number> {
-    return await this.projectRepo.count({
-      where: {
-        ownerId,
-        projectType: ProjectType[projectType as keyof typeof ProjectType],
-        status: Not(In([ProjectStatus.Closed, ProjectStatus.Cancelled])),
-      },
-    });
-  }
-
   async create(
     projectType: ProjectType,
     project: any,
     ownerId: string,
-    files: Multer.File[],
+    files: FilesDTO,
   ) {
-    const command = this.commandManager.getCommand(projectType);
+    const command = this.commandCollection.getCommand(projectType);
 
     if (!command) throw new Error(`Command not found for: ${projectType}`);
 
     return await command.create(project, ownerId, files);
+  }
+
+  async update(
+    projectType: ProjectType,
+    project: any,
+    ownerId: string,
+    files: FilesDTO,
+  ) {
+    const command = this.commandCollection.getCommand(projectType);
+
+    if (!command) throw new Error(`Command not found for: ${projectType}`);
+
+    return await command.update(project, ownerId, files);
   }
 
   async cancel(
@@ -95,7 +89,7 @@ export class ProjectService {
     projectId: string,
     approverId: string,
   ) {
-    const command = this.commandManager.getCommand(projectType);
+    const command = this.commandCollection.getCommand(projectType);
 
     if (!command) throw new Error(`Command not found for: ${projectType}`);
 
@@ -107,7 +101,7 @@ export class ProjectService {
     projectId: string,
     buyerId: string,
   ) {
-    const command = this.commandManager.getCommand(projectType);
+    const command = this.commandCollection.getCommand(projectType);
 
     if (!command) throw new Error(`Command not found for: ${projectType}`);
 
@@ -115,7 +109,7 @@ export class ProjectService {
   }
 
   async rejectDeal(projectType: ProjectType, projectId: string) {
-    const command = this.commandManager.getCommand(projectType);
+    const command = this.commandCollection.getCommand(projectType);
 
     if (!command) throw new Error(`Command not found for: ${projectType}`);
 
@@ -123,7 +117,7 @@ export class ProjectService {
   }
 
   async expire(projectType: ProjectType, expireDays: number) {
-    const command = this.commandManager.getCommand(projectType);
+    const command = this.commandCollection.getCommand(projectType);
 
     if (!command) throw new Error(`Command not found for: ${projectType}`);
 
@@ -131,7 +125,7 @@ export class ProjectService {
   }
 
   async delete(projectType: ProjectType, projectId: string) {
-    const command = this.commandManager.getCommand(projectType);
+    const command = this.commandCollection.getCommand(projectType);
 
     if (!command) throw new Error(`Command not found for: ${projectType}`);
 
@@ -143,7 +137,7 @@ export class ProjectService {
     expireDays: number,
     statusToDelete: ProjectStatus[],
   ) {
-    const command = this.commandManager.getCommand(projectType);
+    const command = this.commandCollection.getCommand(projectType);
 
     if (!command) throw new Error(`Command not found for: ${projectType}`);
 

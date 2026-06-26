@@ -12,10 +12,6 @@ export class ProjectDTO {
 
   @IsOptional()
   @IsString()
-  mainPicture?: string;
-
-  @IsOptional()
-  @IsString()
   address?: string;
 
   @IsOptional()

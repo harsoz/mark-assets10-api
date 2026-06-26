@@ -4,17 +4,17 @@ import { ProjectService } from './project.service';
 import { ProjectCollectionService } from './project-collection.service';
 import { RepositoryModule } from 'src/infrastructure/repository/repository.model';
 import { ProjectQueryService } from './queries/project-query.service';
-import { CommandManagerService } from './commands/command-manager.service';
-import { AssetCommandService } from './commands/asset-command.service';
+import { CommandCollection } from './commands/collection.command';
+import { AssetCommand } from './commands/asset.command';
+import { ThirdPartiesModule } from 'src/shared/third-parties/third-parties.module';
 
 @Module({
-  imports: [RepositoryModule],
+  imports: [RepositoryModule, ThirdPartiesModule],
   controllers: [ProjectController],
   providers: [
     ProjectCollectionService,
-    AssetCommandService,
-    
-    CommandManagerService,
+    AssetCommand,
+    CommandCollection,
     ProjectQueryService,
     ProjectService,
   ],

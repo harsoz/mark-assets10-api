@@ -23,6 +23,6 @@ import { FileStorageAdapter } from './adapters/file-storage.adapter';
         // process.env.USE_S3 === 'true' ? S3StorageAdapter : LocalStorageAdapter,
     },
   ],
-  exports: [AltiriaService, BoldService, NotificationService, ExcelService],
+  exports: [AltiriaService, BoldService, NotificationService, ExcelService, StorageService],
 })
 export class ThirdPartiesModule {}
