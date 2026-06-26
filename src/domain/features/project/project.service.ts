@@ -3,11 +3,12 @@ import { ProjectCollectionService } from './project-collection.service';
 import { ProjectRepository } from 'src/infrastructure/repository';
 import { GetProjectDTO } from './dtos/get-project.dto';
 import { ProjectType } from 'src/domain/types/project.type';
-import { ProjectFileModel, ProjectReadModel } from 'src/domain/models';
+import { ProjectFileModel } from 'src/domain/models';
 import { ProjectQueryService } from './queries/project-query.service';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
 import { FilesDTO } from './dtos/file.dto';
 import { CommandCollection } from './commands/collection.command';
+import { ProjectViewModel } from './queries/view/project-view.model';
 
 @Injectable()
 export class ProjectService {
@@ -25,19 +26,7 @@ export class ProjectService {
    * @returns a project by id
    */
   async getById(id: string) {
-    const project = await this.projectRepo.findById(id);
-    if (!project) throw new Error('Project does not exists');
-
-    const repo = this.projectCollectionService.getProjectDetailEngine(
-      project.projectType,
-    );
-
-    const details = await repo.findById(project.id);
-
-    return {
-      ...this.projectRepo.toModel(project),
-      details: repo.toModel(details as any),
-    } as ProjectReadModel;
+    return this.queryService.getById(id);
   }
 
   /**
@@ -56,6 +45,14 @@ export class ProjectService {
    */
   async getAllByUserId(request: GetProjectDTO, userId: string) {
     return this.queryService.getAllByUserId(request, userId);
+  }
+
+  /**
+   * @param projectId
+   * @returns all users of a project
+   */
+  async getUsersFromProject(projectId: string) {
+    return this.queryService.getUsersFromProject(projectId);
   }
 
   async create(

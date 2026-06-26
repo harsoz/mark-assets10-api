@@ -11,7 +11,6 @@ import {
 import { BaseCommand } from './base.command';
 import { StorageService } from 'src/shared/third-parties/storage.service';
 import { ProfileType } from 'src/domain/types/profile.type';
-import { ProjectReadModel } from 'src/domain/models';
 import {
   NaturalResourcesDevelopment,
   NaturalResourcesFinancing,
@@ -20,6 +19,7 @@ import {
 } from 'src/infrastructure/database';
 import { UnitOfWork } from 'src/infrastructure/database/utils/unit-of-work.util';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
+import { ProjectRecordModel } from 'src/domain/models/project-record.model';
 
 @Injectable()
 export class NaturalResourcesFinancingCommand extends BaseCommand {
@@ -88,7 +88,7 @@ export class NaturalResourcesFinancingCommand extends BaseCommand {
       return {
         ...projectCreated,
         details: { ...nrfCreated },
-      } as ProjectReadModel;
+      } as ProjectRecordModel;
     });
   }
 
@@ -167,7 +167,7 @@ export class NaturalResourcesFinancingCommand extends BaseCommand {
       return {
         ...updatedProject,
         details: updatedNrf,
-      } as ProjectReadModel;
+      } as ProjectRecordModel;
     });
   }
 }

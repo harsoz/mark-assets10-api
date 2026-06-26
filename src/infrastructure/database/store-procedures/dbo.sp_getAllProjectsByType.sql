@@ -217,7 +217,7 @@ BEGIN
         -- END
     END 
 
-    -- 4. Construct the Dynamic SQL
+    -- 4. Construct the Dynamic SQL - potentially we need joins against other props to get all data available
     SET @SQL = N'
     ;WITH ProjectData AS (
         SELECT 

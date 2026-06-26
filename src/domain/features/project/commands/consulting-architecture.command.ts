@@ -8,11 +8,9 @@ import {
   ProjectRepository,
   UserRepository,
 } from 'src/infrastructure/repository';
-import { DataSource } from 'typeorm';
 import { BaseCommand } from './base.command';
 import { StorageService } from 'src/shared/third-parties/storage.service';
 import { ProfileType } from 'src/domain/types/profile.type';
-import { ProjectReadModel } from 'src/domain/models';
 import {
   ConsultingArchitecture,
   Project,
@@ -20,6 +18,7 @@ import {
 } from 'src/infrastructure/database';
 import { UnitOfWork } from 'src/infrastructure/database/utils/unit-of-work.util';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
+import { ProjectRecordModel } from 'src/domain/models/project-record.model';
 
 @Injectable()
 export class ConsultingArchitectureCommand extends BaseCommand {
@@ -94,7 +93,7 @@ export class ConsultingArchitectureCommand extends BaseCommand {
       return {
         ...projectCreated,
         details: { ...consultingArchitectureCreated },
-      } as ProjectReadModel;
+      } as ProjectRecordModel;
     });
   }
 
@@ -170,7 +169,7 @@ export class ConsultingArchitectureCommand extends BaseCommand {
       return {
         ...updatedProject,
         details: updatedConsultingArchitecture,
-      } as ProjectReadModel;
+      } as ProjectRecordModel;
     });
   }
 }

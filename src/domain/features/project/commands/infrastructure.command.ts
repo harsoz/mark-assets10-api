@@ -11,7 +11,6 @@ import {
 import { BaseCommand } from './base.command';
 import { StorageService } from 'src/shared/third-parties/storage.service';
 import { ProfileType } from 'src/domain/types/profile.type';
-import { ProjectReadModel } from 'src/domain/models';
 import {
   Infrastructure,
   Project,
@@ -19,6 +18,7 @@ import {
 } from 'src/infrastructure/database';
 import { UnitOfWork } from 'src/infrastructure/database/utils/unit-of-work.util';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
+import { ProjectRecordModel } from 'src/domain/models/project-record.model';
 
 @Injectable()
 export class InfrastructureCommand extends BaseCommand {
@@ -95,7 +95,7 @@ export class InfrastructureCommand extends BaseCommand {
       return {
         ...projectCreated,
         details: { ...infrastructureCreated },
-      } as ProjectReadModel;
+      } as ProjectRecordModel;
     });
   }
 
@@ -180,7 +180,7 @@ export class InfrastructureCommand extends BaseCommand {
       return {
         ...updatedProject,
         details: updatedInfrastructure,
-      } as ProjectReadModel;
+      } as ProjectRecordModel;
     });
   }
 }

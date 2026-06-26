@@ -11,10 +11,10 @@ import {
 import { BaseCommand } from './base.command';
 import { StorageService } from 'src/shared/third-parties/storage.service';
 import { ProfileType } from 'src/domain/types/profile.type';
-import { ProjectReadModel } from 'src/domain/models';
 import { EnergyAsset, Project, ProjectFile } from 'src/infrastructure/database';
 import { UnitOfWork } from 'src/infrastructure/database/utils/unit-of-work.util';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
+import { ProjectRecordModel } from 'src/domain/models/project-record.model';
 
 @Injectable()
 export class EnergyAssetCommand extends BaseCommand {
@@ -95,7 +95,7 @@ export class EnergyAssetCommand extends BaseCommand {
       return {
         ...projectCreated,
         details: { ...energyAssetCreated },
-      } as ProjectReadModel;
+      } as ProjectRecordModel;
     });
   }
 
@@ -189,7 +189,7 @@ export class EnergyAssetCommand extends BaseCommand {
       return {
         ...updatedProject,
         details: updatedEnergyAsset,
-      } as ProjectReadModel;
+      } as ProjectRecordModel;
     });
   }
 }

@@ -11,10 +11,10 @@ import {
 import { BaseCommand } from './base.command';
 import { StorageService } from 'src/shared/third-parties/storage.service';
 import { ProfileType } from 'src/domain/types/profile.type';
-import { ProjectReadModel } from 'src/domain/models';
 import { Financing, Project, ProjectFile } from 'src/infrastructure/database';
 import { UnitOfWork } from 'src/infrastructure/database/utils/unit-of-work.util';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
+import { ProjectRecordModel } from 'src/domain/models/project-record.model';
 
 @Injectable()
 export class FinancingCommand extends BaseCommand {
@@ -93,7 +93,7 @@ export class FinancingCommand extends BaseCommand {
       return {
         ...projectCreated,
         details: { ...financingCreated },
-      } as ProjectReadModel;
+      } as ProjectRecordModel;
     });
   }
 
@@ -179,7 +179,7 @@ export class FinancingCommand extends BaseCommand {
       return {
         ...updatedProject,
         details: updatedFinancing,
-      } as ProjectReadModel;
+      } as ProjectRecordModel;
     });
   }
 }

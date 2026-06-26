@@ -3,5 +3,4 @@ export * from './location.model';
 export * from './user.model';
 export * from './project.model';
 export * from './other.model';
-export * from './project.read';
 export * from './files-uploaded.model';

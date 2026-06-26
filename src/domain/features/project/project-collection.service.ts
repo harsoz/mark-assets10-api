@@ -54,7 +54,7 @@ export class ProjectCollectionService {
     ]);
   }
 
-  getProjectDetailEngine<T extends ProjectType>(
+  getRepository<T extends ProjectType>(
     projectType: T,
   ): ProjectRegistry[T] {
     const key = projectType;

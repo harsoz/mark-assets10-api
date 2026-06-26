@@ -1,4 +1,4 @@
-import { FilesUploadedModel, ProjectFileModel, ProjectModel } from 'src/domain/models';
+import { ProjectFileModel, ProjectModel } from 'src/domain/models';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
 import { FileType } from 'src/domain/types/file.type';
 
@@ -33,11 +33,8 @@ export interface ICommand {
 
 
 // pending
-// Task<List<ABSUser>> GetUsersFromProject(ProjectType projectType, string projectId);
 // Task<ABSUser> GetUserWithProjects(string userId);
 
-// pending
-// Task<ProjectFilesDTO> ProcessFiles(IFormFile? MainPicture, List<IFormFile>? Galery, List<IFormFile>? Files, FileType fileType = FileType.File);
 
 // completed
 // Task<ABSProjects> GetAll(GetProjectDTO request, string userId, string projectType);
@@ -57,6 +54,8 @@ export interface ICommand {
 // Task<Project> Complete(ProjectType projectType, string projectId);
 // Task<Project> CloseAgreement(ProjectType projectType, string projectId, string buyerId);
 // Task<Project> AddContractToProject(ProjectType projectType, FileType contractType, List<ProjectFile> files, string projectId);
+// Task<ProjectFilesDTO> ProcessFiles(IFormFile? MainPicture, List<IFormFile>? Galery, List<IFormFile>? Files, FileType fileType = FileType.File);
+// Task<List<ABSUser>> GetUsersFromProject(ProjectType projectType, string projectId);
 
 
 // completed but missing notifications & emails

@@ -1,13 +1,12 @@
-import { ProjectStatus } from "src/domain/types/project-status.type";
-import { BaseModel } from "./base.model";
-import { Currency } from "src/domain/types/currency.type";
-import { MeasureUnit } from "src/domain/types/measure-unit.type";
-import { ProjectType } from "src/domain/types/project.type";
+import { Currency } from "../types/currency.type";
+import { MeasureUnit } from "../types/measure-unit.type";
+import { ProjectStatus } from "../types/project-status.type";
+import { ProjectType } from "../types/project.type";
 import { CityModel, CountryModel, StateModel } from "./location.model";
-import { UserModel } from "./user.model";
 import { ProjectFileModel } from "./project.model";
+import { UserModel } from "./user.model";
 
-export interface ProjectReadModel extends BaseModel {
+export interface ProjectRecordModel {
   status?: ProjectStatus;
   currency: Currency;
   measureUnit: MeasureUnit;
@@ -32,6 +31,8 @@ export interface ProjectReadModel extends BaseModel {
   lawyerId?: string;
   analystId?: string;
   clientId?: string;
+
+  // to handle this in query 
   country?: CountryModel;
   state?: StateModel;
   city?: CityModel;
@@ -41,5 +42,6 @@ export interface ProjectReadModel extends BaseModel {
   analyst?: UserModel;
   client?: UserModel;
   projectFiles?: ProjectFileModel[];
+
   details: any; // any for now
 }

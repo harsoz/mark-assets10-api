@@ -57,6 +57,12 @@ export class ProjectController {
     return this._projectService.getAllByUserId(request, userId);
   }
 
+  @Get('all/users/project/:projectId')
+  @HttpCode(HttpStatus.OK)
+  getUsersFromProject(@Param('projectId') projectId: string) {
+    return this._projectService.getUsersFromProject(projectId);
+  }
+
   @Post(':projectType/:ownerId')
   @UseInterceptors(FileFieldsInterceptor([{ name: 'files', maxCount: 20 }]))
   async create(
