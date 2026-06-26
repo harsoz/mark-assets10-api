@@ -28,5 +28,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   ],
   controllers: [],
   providers: [SampleFeedSeeder],
+  exports: [],
 })
 export class DatabaseModule {}

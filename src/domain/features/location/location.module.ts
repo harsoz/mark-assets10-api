@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { LocationController } from './location.controller';
 import { LocationService } from './location.service';
-import { RepositoryModule } from 'src/infrastructure/repository/repository.model';
+import { RepositoryModule } from 'src/infrastructure/repository/repository.module';
 
 @Module({
   imports: [RepositoryModule],

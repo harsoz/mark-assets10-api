@@ -1,8 +1,8 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
 import { ICommand } from '../interfaces/command.interface';
-import { ProjectRepository } from 'src/infrastructure/repository';
-import { DataSource, In, LessThan, Not } from 'typeorm';
+import { ProjectRepository, UnitOfWork } from 'src/infrastructure/repository';
+import { In, LessThan, Not } from 'typeorm';
 import { Project, ProjectFile } from 'src/infrastructure/database';
 import { ProjectFileModel, ProjectModel } from 'src/domain/models';
 import { FileType } from 'src/domain/types/file.type';
@@ -11,7 +11,7 @@ import { StorageService } from 'src/shared/third-parties/storage.service';
 
 export abstract class BaseCommand implements ICommand {
   constructor(
-    protected _dataSource: DataSource,
+    protected readonly _unitOfWork: UnitOfWork,
     protected _projectRepo: ProjectRepository,
     protected _storageService: StorageService,
   ) {}
@@ -107,23 +107,16 @@ export abstract class BaseCommand implements ICommand {
   }
 
   async delete(projectId: string) {
-    return await this._dataSource.transaction(async (manager) => {
-      const project = await manager.findOneBy(Project, {
-        id: projectId,
-      });
-      if (project) {
-        // we can delete projectFile potentially by cascade on projects
-        // await manager.delete(ProjectFile, { projectId: projectId }); // potentially deleted on cascade
-        await manager.delete(Project, { id: projectId }); // this will delete on cascade the asset
-      }
-    });
+    // we can delete projectFile potentially by cascade on projects
+    // await manager.delete(ProjectFile, { projectId: projectId }); // potentially deleted on cascade
+    await this._projectRepo.delete(projectId);
   }
 
   async deleteByDays(expireDays: number, statusToDelete: ProjectStatus[]) {
     const threshold = new Date();
     threshold.setDate(threshold.getDate() - expireDays);
 
-    return await this._dataSource.transaction(async (manager) => {
+    return await this._unitOfWork.runInTransaction(async (manager) => {
       const projects = await manager.find(Project, {
         where: { status: In(statusToDelete), updatedAt: LessThan(threshold) },
       });

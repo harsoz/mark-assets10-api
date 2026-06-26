@@ -1,3 +1,4 @@
+export * from '../database/utils/unit-of-work.util';
 export * from './auth-code.repository';
 export * from './city.repository';
 export * from './consulting-architecture.repository';

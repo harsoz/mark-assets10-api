@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ProjectController } from './project.controller';
 import { ProjectService } from './project.service';
 import { ProjectCollectionService } from './project-collection.service';
-import { RepositoryModule } from 'src/infrastructure/repository/repository.model';
+import { RepositoryModule } from 'src/infrastructure/repository/repository.module';
 import { ProjectQueryService } from './queries/project-query.service';
 import { CommandCollection } from './commands/collection.command';
 import { AssetCommand } from './commands/asset.command';

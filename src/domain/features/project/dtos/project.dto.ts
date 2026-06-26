@@ -2,13 +2,8 @@ import { IsString, IsOptional, IsInt, IsEnum, IsNumber, Min } from 'class-valida
 import { Type } from 'class-transformer';
 import { Currency } from 'src/domain/types/currency.type';
 import { MeasureUnit } from 'src/domain/types/measure-unit.type';
-import { ProfileType } from 'src/domain/types/profile.type';
 
 export class ProjectDTO {
-
-  @IsOptional()
-  @IsEnum(ProfileType)
-  profileType?: ProfileType;
 
   @IsOptional()
   @IsString()
