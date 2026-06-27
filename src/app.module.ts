@@ -8,6 +8,9 @@ import { LocationModule } from './domain/features/location/location.module';
 import { ProjectModule } from './domain/features/project/project.module';
 import { JobModule } from './domain/features/job/job.module';
 import { DynamicFieldModule } from './domain/features/dynamic-field/dynamic-field.module';
+import { InfoFormModule } from './domain/features/info-form/info-form.module';
+import { FileModule } from './domain/features/file/file.module';
+import { PermissionModule } from './domain/features/permission/permission.module';
 
 @Module({
   imports: [
@@ -18,7 +21,10 @@ import { DynamicFieldModule } from './domain/features/dynamic-field/dynamic-fiel
     LocationModule,
     ProjectModule,
     JobModule,
-    DynamicFieldModule
+    DynamicFieldModule,
+    InfoFormModule,
+    FileModule,
+    PermissionModule
   ],
   controllers: [AppController],
   providers: [],
