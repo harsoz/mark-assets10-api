@@ -14,7 +14,7 @@ import { ProjectRepository } from 'src/infrastructure/repository';
  *  to include missing objects or to use appropiate repo from projectCollection to get any missed prop
  * */
 @Injectable()
-export class ProjectQueryService {
+export class ProjectQuery {
   constructor(
     private readonly _dataSource: DataSource, // we should use an adapter
     private readonly _projectCollectionService: ProjectCollectionService,

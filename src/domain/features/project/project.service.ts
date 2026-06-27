@@ -3,8 +3,7 @@ import { ProjectCollectionService } from './project-collection.service';
 import { ProjectRepository } from 'src/infrastructure/repository';
 import { GetProjectDTO } from './dtos/get-project.dto';
 import { ProjectType } from 'src/domain/types/project.type';
-import { ProjectFileModel } from 'src/domain/models';
-import { ProjectQueryService } from './queries/project-query.service';
+import { ProjectQuery } from './queries/project.query';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
 import { FilesDTO } from './dtos/file.dto';
 import { CommandCollection } from './commands/collection.command';
@@ -15,7 +14,7 @@ export class ProjectService {
   constructor(
     private readonly projectRepo: ProjectRepository,
     private readonly projectCollectionService: ProjectCollectionService,
-    private readonly queryService: ProjectQueryService,
+    private readonly queryService: ProjectQuery,
     private readonly commandCollection: CommandCollection,
     // private readonly stateMachine: ProjectStateMachine,
   ) {}

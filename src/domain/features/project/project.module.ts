@@ -3,7 +3,7 @@ import { ProjectController } from './project.controller';
 import { ProjectService } from './project.service';
 import { ProjectCollectionService } from './project-collection.service';
 import { RepositoryModule } from 'src/infrastructure/repository/repository.module';
-import { ProjectQueryService } from './queries/project-query.service';
+import { ProjectQuery } from './queries/project.query';
 import { CommandCollection } from './commands/collection.command';
 import { AssetCommand } from './commands/asset.command';
 import { ThirdPartiesModule } from 'src/shared/third-parties/third-parties.module';
@@ -31,7 +31,7 @@ import { RealStateCommand } from './commands/real-state.command';
     NaturalResourcesFinancingCommand,
     RealStateCommand,
     CommandCollection,
-    ProjectQueryService,
+    ProjectQuery,
     ProjectService,
   ],
   exports: [CommandCollection]
