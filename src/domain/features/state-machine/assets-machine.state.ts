@@ -25,7 +25,10 @@ export const assetsMachine = createMachine({
         // projects events
         SUBMIT: {
           target: 'ANALYSIS',
-          guard: hasRequiredFiles,
+          // guard: hasRequiredFiles,
+          // actions: () => {
+
+          // }
         }
       }
     },

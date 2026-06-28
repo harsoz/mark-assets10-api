@@ -1,7 +1,7 @@
 import { IEmailStrategy } from '../interfaces/email-strategy.interface';
 
 interface AccountParams {
-  user: { name: string };
+  name: string;
   email: string;
 }
 
@@ -12,7 +12,7 @@ export class AccountCreatedStrategy implements IEmailStrategy {
     return {
       subject: 'Cuenta Creada - [Casilleros Xlocker]',
       html: template
-        .replace(/{{CustomerName}}/g, parameters.user.name)
+        .replace(/{{CustomerName}}/g, parameters.name)
         .replace(/{{CustomerEmail}}/g, parameters.email),
     };
   }

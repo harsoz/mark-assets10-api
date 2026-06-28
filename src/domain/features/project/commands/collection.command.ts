@@ -15,9 +15,8 @@ import { ConsultingArchitectureCommand } from './consulting-architecture.command
 export class CommandCollection {
   private readonly _collection: Map<ProjectType, ICommand> = new Map();
 
-  // if one project needs methods which are not required for others, create the special type
-  // validate getCommand to look into both collections
-  //private readonly _collectionSpecial: Map<ProjectType, IDetailsCommandSpecial> = new Map();
+  // if one project needs methods which are not required for others, create the special interface and type guard to
+  // validate method to be used by the service
 
   constructor(
     private readonly _assetCommand: AssetCommand,

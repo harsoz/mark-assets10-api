@@ -16,7 +16,6 @@ import { UserStatus } from '../../domain/types/user-status.type';
 import { Role } from './role.entity';
 import { ProfessionalExperience } from './professional-experience.entity';
 import { Education } from './education.entity';
-import { UserProject } from './user-project.entity';
 import { Country } from './country.entity';
 import { State } from './state.entity';
 import { City } from './city.entity';
@@ -35,6 +34,9 @@ export class User {
 
   @Column({ nullable: true })
   phoneNumber?: string;
+
+  @Column({ nullable: true, default: false})
+  twoFactorEnabled?: boolean = false;
 
   @Column({ default: '' })
   name: string = '';
@@ -92,6 +94,9 @@ export class User {
 
   @Column({ type: 'varchar', length: 200, nullable: true })
   profileType?: ProfileType;
+
+  @Column({ default: false })
+  phoneNumberConfirmed: boolean = false;
 
   @ManyToMany(() => Role)
   @JoinTable({ name: 'user_roles' })

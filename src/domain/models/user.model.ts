@@ -4,7 +4,6 @@ import type { ProjectModel } from './project.model';
 import type { DynamicFieldModel, DataUserProfileModel } from './other.model';
 import type { LanguageType } from '../types/language.type';
 import type { UserStatus } from '../types/user-status.type';
-import type { ProfileType } from '../types/profile.type';
 import type { ProjectType } from '../types/project.type';
 import type { ProjectStatus } from '../types/project-status.type';
 
@@ -75,6 +74,7 @@ export interface UserProjectModel {
 export interface UserModel extends BaseModel {
   email: string;
   phoneNumber?: string;
+  twoFactorEnabled?: boolean;
   name: string;
   password: string;
   phoneVerificationCode: string;
