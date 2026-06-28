@@ -11,6 +11,7 @@ import { DynamicFieldModule } from './domain/features/dynamic-field/dynamic-fiel
 import { InfoFormModule } from './domain/features/info-form/info-form.module';
 import { FileModule } from './domain/features/file/file.module';
 import { PermissionModule } from './domain/features/permission/permission.module';
+import { AuthModule } from './domain/features/auth/auth.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { PermissionModule } from './domain/features/permission/permission.module
     DynamicFieldModule,
     InfoFormModule,
     FileModule,
-    PermissionModule
+    PermissionModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [],

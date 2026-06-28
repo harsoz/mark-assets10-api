@@ -118,18 +118,4 @@ export class AuthController {
   ) {
     return await this._authService.changePassword(dto, user.id);
   }
-
-  //   @Post('request-reset')
-  //   async requestReset(@Body('email') email: string) { return this._authService.requestReset(email); }
-
-  //   @Post('verify-code')
-  //   async verify(@Body() dto: VerifyCodeDTO) { /* ... */ }
-
-  //   @Post('sign-out')
-  // //   @UseGuards(JwtAuthGuard)
-  //   async signOut() { return { message: 'Token invalidado en cliente' }; }
-
-  //   @Get('me')
-  // //   @UseGuards(JwtAuthGuard)
-  //   getMe(@CurrentUser() user: User) { return user; }
 }
