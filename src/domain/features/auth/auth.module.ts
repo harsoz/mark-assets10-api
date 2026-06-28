@@ -4,6 +4,8 @@ import { RepositoryModule } from 'src/infrastructure/repository/repository.modul
 import { AuthService } from './auth.service';
 import { PhoneService } from './phone.service';
 import { ThirdPartiesModule } from 'src/shared/third-parties/third-parties.module';
+import { AuthController } from './auth.controller';
+import { EmailModule } from 'src/shared/email/email.module';
 
 
 @Module({
@@ -13,9 +15,10 @@ import { ThirdPartiesModule } from 'src/shared/third-parties/third-parties.modul
       secret: 'MaquinaDeGuerraEslaOnda#899!',
       signOptions: { expiresIn: '60m' },
     }),
-    ThirdPartiesModule
+    ThirdPartiesModule,
+    EmailModule
   ],
-  controllers: [],
+  controllers: [AuthController],
   providers: [PhoneService, AuthService],
 })
 export class AuthModule {}
