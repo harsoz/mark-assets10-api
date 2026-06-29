@@ -91,8 +91,7 @@ export class AuthController {
   @Post('verify-mfa')
   @HttpCode(HttpStatus.OK)
   async verifyMfa(@Body() verifyMfaDto: VerifyMfaDTO) {
-    // const jwtPayload = req['user'] as { sub: string };
-    return await this._authService.verifyMfa(verifyMfaDto, '');
+    return await this._authService.verifyMfa(verifyMfaDto);
   }
 
   @ApiBearerAuth()

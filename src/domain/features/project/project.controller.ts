@@ -12,6 +12,7 @@ import {
   Put,
   Query,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
@@ -22,6 +23,7 @@ import { ProjectType } from 'src/domain/types/project.type';
 import { CreateDTO } from './dtos/create.dto';
 import type { FilesDTO } from './dtos/file.dto';
 import { UpdateDTO } from './dtos/update.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('v1/projects/')
 export class ProjectController {
@@ -29,6 +31,7 @@ export class ProjectController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
   getById(@Param('id') id: string) {
     return this._projectService.getById(id);
   }

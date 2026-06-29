@@ -247,7 +247,6 @@ export class AuthService {
       });
     }
 
-    // check this against ABSUser
     return {
       id: user.id,
       name: user.name,
@@ -255,12 +254,12 @@ export class AuthService {
       phoneNumber: user.phoneNumber,
       status: user.status,
       isAdmin: hasAdminRole,
-      role: roleNames[0] || null, // roles.FirstOrDefault()
-      permissions: Array.from(permissionsSet), // Lista sin duplicados
+      role: roleNames[0] || null,
+      permissions: Array.from(permissionsSet),
     };
   }
 
-  async verifyMfa(payload: VerifyMfaDTO, userId: string) {
+  async verifyMfa(payload: VerifyMfaDTO) {
     const authCode = await this._authCodeRepository.findOne({
       where: {
         // userId: userId, // potentially not used
@@ -393,7 +392,7 @@ export class AuthService {
     }
 
     codeEntity.code = this._phoneService.generateMfaCode();
-    
+
     await this._authCodeRepository.update(codeEntity.id, codeEntity);
 
     // fire and forget
