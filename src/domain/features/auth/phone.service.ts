@@ -76,7 +76,7 @@ export class PhoneService {
       throw new BadRequestException('Phone number not found');
     }
 
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const code = this.generateMfaCode();
 
     if (payload.phoneNumber) {
       user.phoneNumber = payload.phoneNumber;
@@ -85,10 +85,17 @@ export class PhoneService {
 
     const result = await this._userRepository.update(user.id, user);
 
+    // fire and forget
     this._altiriaService
       .sendVerificationCode(user.phoneNumber || '', code)
       .catch((err) => console.error('Error enviando SMS:', err));
 
     return !!result;
+  }
+
+  // this might need its own service, but it's only in auth service for now
+  generateMfaCode() {
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    return code;
   }
 }

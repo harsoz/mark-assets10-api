@@ -37,7 +37,7 @@ export class AltiriaService {
         this.httpService.post(this.endpoint, payload)
       );
 
-      this.logger.debug(response.data); 
+      this.logger.log(response.data); 
 
       return true;
     } catch (error) {

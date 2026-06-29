@@ -2,10 +2,10 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import {
   AuthCodeRepository,
   TrustedDeviceRepository,
@@ -16,9 +16,7 @@ import * as bcrypt from 'bcrypt';
 import { UserStatus } from 'src/domain/types/user-status.type';
 import { EmailService } from 'src/shared/email/email.service';
 import { LoginDTO } from './dtos/login.dto';
-import { User } from 'src/infrastructure/database';
 import { MoreThan, MoreThanOrEqual } from 'typeorm';
-import { randomUUID } from 'crypto';
 import { RefreshDTO } from './dtos/refresh.dto';
 import { VerifyMfaDTO } from './dtos/verify-mfa.dto';
 import { PhoneService } from './phone.service';
@@ -31,13 +29,14 @@ import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {
+  private readonly _logger = new Logger(AuthService.name);
+
   constructor(
     private readonly _userRepository: UserRepository, // replace this with _userService later
     private readonly _authCodeRepository: AuthCodeRepository,
     private readonly _trustedDeviceRepository: TrustedDeviceRepository,
     private readonly _emailService: EmailService,
     private readonly _phoneService: PhoneService,
-    private _jwtService: JwtService,
     private readonly _tokenService: TokenService,
   ) {}
 
@@ -69,11 +68,14 @@ export class AuthService {
       status: UserStatus.Active,
     });
 
-    await this._emailService.send(
-      'account-created',
-      { name: payload.name, email: payload.email },
-      newUser.email,
-    );
+    // fire and forget
+    this._emailService
+      .send(
+        'account-created',
+        { name: payload.name, email: payload.email },
+        newUser.email,
+      )
+      .catch((error) => this._logger.error(error));
 
     return mapToSignUpResponse(this._userRepository.toModel(newUser));
   }
@@ -107,19 +109,23 @@ export class AuthService {
       });
 
       if (!isTrusted) {
-        const codeEntity = await this._generateMfaCode(user, 6);
+        const code = await this._phoneService.generateMfaCode();
 
-        await this._emailService.send(
-          '2fa',
-          { email: user.email, code: codeEntity.code },
-          user.email,
-        );
+        const authCode = await this._authCodeRepository.create({
+          userId: user.id,
+          code,
+        });
+
+        // fire and forget
+        this._emailService
+          .send('2fa', { email: user.email, code }, user.email)
+          .catch((error) => this._logger.error(error));
 
         return {
           requiresMFA: true,
           message: 'Se requiere verificación de dos factores',
           redirectUrl: '/verify-mfa',
-          token: codeEntity.id,
+          token: authCode.id,
           success: true,
         };
       }
@@ -257,7 +263,7 @@ export class AuthService {
   async verifyMfa(payload: VerifyMfaDTO, userId: string) {
     const authCode = await this._authCodeRepository.findOne({
       where: {
-        userId: userId, // potentially not used
+        // userId: userId, // potentially not used
         code: payload.code,
         used: false,
       },
@@ -386,25 +392,20 @@ export class AuthService {
       throw new NotFoundException('User does not exist');
     }
 
-    codeEntity.code = Math.floor(100000 + Math.random() * 900000).toString();
+    codeEntity.code = this._phoneService.generateMfaCode();
+    
     await this._authCodeRepository.update(codeEntity.id, codeEntity);
 
-    await this._emailService.send(
-      '2fa',
-      { email: codeEntity.user.email, code: codeEntity.code },
-      codeEntity.user.email,
-    );
+    // fire and forget
+    this._emailService
+      .send(
+        '2fa',
+        { email: codeEntity.user.email, code: codeEntity.code },
+        codeEntity.user.email,
+      )
+      .catch((error) => this._logger.error(error));
 
     return true;
-  }
-
-  private async _generateMfaCode(user: User, length: number) {
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-
-    return {
-      id: randomUUID(),
-      code: code,
-    };
   }
 }
 

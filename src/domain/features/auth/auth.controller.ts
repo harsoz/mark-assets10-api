@@ -90,12 +90,14 @@ export class AuthController {
 
   @Post('verify-mfa')
   @HttpCode(HttpStatus.OK)
-  async verifyMfa(@Body() verifyMfaDto: VerifyMfaDTO, @Req() req: Request) {
-    const jwtPayload = req['user'] as { sub: string };
-    return await this._authService.verifyMfa(verifyMfaDto, jwtPayload.sub);
+  async verifyMfa(@Body() verifyMfaDto: VerifyMfaDTO) {
+    // const jwtPayload = req['user'] as { sub: string };
+    return await this._authService.verifyMfa(verifyMfaDto, '');
   }
 
+  @ApiBearerAuth()
   @Post('verify-phone')
+  @UseGuards(JwtAuthGuard)
   async verifyPhone(
     @Body() request: VerifyPhoneDTO,
     @CurrentUser() user: User, // need to check the model for user
@@ -103,7 +105,9 @@ export class AuthController {
     return await this._authService.verifyPhone(request, user.id);
   }
 
+  @ApiBearerAuth()
   @Post('send-phone-verification-code')
+  @UseGuards(JwtAuthGuard)
   async sendPhoneVerificationCode(
     @Body() request: SendPhoneVerificationDTO,
     @CurrentUser() user: User,
