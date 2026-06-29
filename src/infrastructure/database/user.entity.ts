@@ -27,7 +27,7 @@ import { ProfileType } from 'src/domain/types/profile.type';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string = '';
+  id!: string;
 
   @Column({ unique: true })
   email: string = '';

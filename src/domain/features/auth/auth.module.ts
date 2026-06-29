@@ -6,7 +6,9 @@ import { PhoneService } from './phone.service';
 import { ThirdPartiesModule } from 'src/shared/third-parties/third-parties.module';
 import { AuthController } from './auth.controller';
 import { EmailModule } from 'src/shared/email/email.module';
-
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './guards/jwt.strategy';
+import { TokenService } from './token.service';
 
 @Module({
   imports: [
@@ -15,10 +17,11 @@ import { EmailModule } from 'src/shared/email/email.module';
       secret: 'MaquinaDeGuerraEslaOnda#899!',
       signOptions: { expiresIn: '60m' },
     }),
+    PassportModule,
     ThirdPartiesModule,
-    EmailModule
+    EmailModule,
   ],
   controllers: [AuthController],
-  providers: [PhoneService, AuthService],
+  providers: [PhoneService, JwtStrategy, TokenService, AuthService],
 })
 export class AuthModule {}

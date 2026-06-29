@@ -12,8 +12,7 @@ export class EmailService {
   private readonly logger = new Logger(EmailService.name);
   private transporter: nodemailer.Transporter;
   private readonly senderEmail: string;
-    private readonly receiverEmail: string;
-
+  private readonly receiverEmail: string;
 
   constructor(
     private readonly configService: ConfigService,
@@ -21,7 +20,7 @@ export class EmailService {
     private readonly _template: EmailTemplateService,
   ) {
     this.senderEmail = this.configService.get<string>('SMTP_SENDER') ?? '';
-    this.receiverEmail = this.configService.get<string>('SMTP_SENDER') ?? ''; 
+    this.receiverEmail = this.configService.get<string>('SMTP_SENDER') ?? '';
 
     this.transporter = nodemailer.createTransport({
       host: this.configService.get<string>('SMTP_HOST'),
@@ -66,7 +65,6 @@ export class EmailService {
       this.logger.debug(`Email sent to ${recipient}`);
     } catch (error) {
       this.logger.error(`Error while sending email to ${recipient}`, error);
-      throw error;
     }
   }
 

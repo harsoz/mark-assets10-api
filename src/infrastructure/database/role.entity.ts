@@ -1,23 +1,22 @@
-import { 
-  Entity, 
-  PrimaryGeneratedColumn, 
-  Column, 
-  CreateDateColumn, 
-  UpdateDateColumn, 
-  ManyToMany, 
-  OneToMany
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Permission } from './permission.entity';
 
 @Entity('roles')
 export class Role {
-
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column({ unique: true })
-  name!: string; 
+  name!: string;
 
   @Column({ default: false })
   isAdmin!: boolean;
@@ -31,7 +30,7 @@ export class Role {
   @ManyToMany(() => User, (user) => user.roles)
   users!: User[];
 
-  @OneToMany(() => Permission, (permission) => permission)
+  @ManyToMany(() => Permission, (permission) => permission.roles)
+  @JoinTable({ name: 'role_permissions' }) 
   permissions!: Permission[];
-
 }

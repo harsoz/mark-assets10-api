@@ -25,6 +25,9 @@ import { PhoneService } from './phone.service';
 import { VerifyPhoneDTO } from './dtos/verify-phone.dto';
 import { SendPhoneVerificationDTO } from './dtos/send-phone-verification-code.dto';
 import { ChangePasswordDTO } from './dtos/change-password.dto';
+import { mapToSignUpResponse } from './maps/sing-up.map';
+import { AccessTokenResponseDTO } from './responses/acces-token.response';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {
@@ -35,6 +38,7 @@ export class AuthService {
     private readonly _emailService: EmailService,
     private readonly _phoneService: PhoneService,
     private _jwtService: JwtService,
+    private readonly _tokenService: TokenService,
   ) {}
 
   async signUp(payload: RegisterDTO) {
@@ -71,10 +75,10 @@ export class AuthService {
       newUser.email,
     );
 
-    return this._userRepository.toModel(newUser);
+    return mapToSignUpResponse(this._userRepository.toModel(newUser));
   }
 
-  async signIn(payload: LoginDTO, isAdminPanel: boolean = false) {
+  async signIn(payload: LoginDTO, isAdminPanel: boolean = false): Promise<any> {
     const user = await this._userRepository.findOne({
       where: { email: payload.email },
     });
@@ -122,7 +126,7 @@ export class AuthService {
     }
 
     const accessRequest = { sub: user.id, email: user.email };
-    return { access_token: this._jwtService.sign(accessRequest) };
+    return await this._tokenService.generateAuthTokens(accessRequest);
   }
 
   async signInAdmin(payload: LoginDTO) {
@@ -156,18 +160,15 @@ export class AuthService {
 
     // check if we need to include role in token
     const accessRequest = { sub: user.id, email: user.email, role: 'admin' };
-    return {
-      access_token: this._jwtService.sign(accessRequest),
-    };
+    return (await this._tokenService.generateAuthTokens(
+      accessRequest,
+    )) as AccessTokenResponseDTO;
   }
 
   async refresh(payload: RefreshDTO) {
     try {
-      const newAccessToken = await this._jwtService.verifyAsync(
+      const newAccessToken = await this._tokenService.verifyToken(
         payload.refreshToken,
-        {
-          secret: 'MI_REFRESH_SECRET_SUPER_SEGURO',
-        },
       );
 
       const user = await this._userRepository.findOne({
@@ -178,26 +179,31 @@ export class AuthService {
         throw new UnauthorizedException('Access denied');
       }
 
-      // we might need to include this
-      // Verificamos si la versión del token coincide con la de la base de datos.
-      // Si el usuario cambió su password, incrementas 'tokenVersion' en la DB e invalidará este token.
-      // if (user.tokenVersion !== payload.tokenVersion) {
-      //   throw new UnauthorizedException('La sesión ha expirado o cambiado. Inicie sesión de nuevo.');
+      // para poder revocar sesiones si cambian la contraseña o los das de baja.
+      // if (user.tokenVersion !== newAccessToken.tokenVersion) {
+      //   throw new UnauthorizedException('Session expired or revoked.');
       // }
 
       const newPayload = {
         sub: user.id,
         email: user.email,
-        // role: user.role  not sure about this yet
+        // role: user.role
       };
 
+      const accessToken =
+        await this._tokenService.generateAccessToken(newPayload);
+
       return {
-        access_token: this._jwtService.sign(newPayload, {
-          secret: 'MI_ACCESS_TOKEN_SECRET', // Tu secret normal de endpoints
-        }),
+        accessToken,
       };
-    } catch (error) {
-      throw new UnauthorizedException('Refresh token is invalid or expired');
+    } catch (error: any) {
+      if (error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException(
+          'El Refresh token ha expirado. Por favor, inicia sesión de nuevo.',
+        );
+      }
+
+      throw new UnauthorizedException('El Refresh token es inválido.');
     }
   }
 
@@ -242,7 +248,6 @@ export class AuthService {
       email: user.email,
       phoneNumber: user.phoneNumber,
       status: user.status,
-      // Propiedades dinámicas calculadas:
       isAdmin: hasAdminRole,
       role: roleNames[0] || null, // roles.FirstOrDefault()
       permissions: Array.from(permissionsSet), // Lista sin duplicados
@@ -316,9 +321,8 @@ export class AuthService {
       email: user.email,
       // role: 'user.role ', check this
     };
-    return {
-      access_token: this._jwtService.sign(accessRequest),
-    };
+
+    return await this._tokenService.generateAuthTokens(accessRequest);
   }
 
   async verifyPhone(payload: VerifyPhoneDTO, userId: string) {
@@ -404,22 +408,7 @@ export class AuthService {
   }
 }
 
-/**
- * 
- * completed
- * public async Task<Results<Ok, ValidationProblem>> Register(RegisterDTO registration)
- * public async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, Accepted<ABSLoginResponse>, ProblemHttpResult>> Login(LoginDTO loginRequest)
- * public async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, Accepted<ABSLoginResponse>, ProblemHttpResult>> AdminPanelLogin(LoginDTO loginRequest)
- * public async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, ProblemHttpResult>> AdminLogin(LoginDTO loginRequest)
- * public async Task<Results<Ok<AccessTokenResponse>, UnauthorizedHttpResult, SignInHttpResult, ChallengeHttpResult>> Refresh(RefreshDTO refreshRequest)
- * public async Task<ActionResult<ABSUser?>> VerifyToken()
- * public async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, ProblemHttpResult>> VerifyMFA(VerifyMfaDTO AuthRequest)
- * public async Task<ActionResult<bool>> VerifyPhoneNumber(VerifyPhoneDTO request)
- * public async Task<ActionResult<bool>> SendPhoneVerificationCode(SendPhoneVerificationDTO request)
- * public async Task<ActionResult<bool>> ChangePassword(ChangePasswordDTO request)
- * public async Task<Results<Ok<bool>, EmptyHttpResult, ProblemHttpResult>> ResendCode(ResendCodeDTO request)
-
-        
+/*
 
 // it's not part of auth
 public async Task<ActionResult<bool>> UpdateProfile([FromForm] UpdateProfileDTO request)

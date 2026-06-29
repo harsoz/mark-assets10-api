@@ -20,6 +20,8 @@ import { User } from 'src/infrastructure/database';
 import { VerifyPhoneDTO } from './dtos/verify-phone.dto';
 import { SendPhoneVerificationDTO } from './dtos/send-phone-verification-code.dto';
 import { ChangePasswordDTO } from './dtos/change-password.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('v1/auth')
 export class AuthController {
@@ -67,16 +69,17 @@ export class AuthController {
     return await this._authService.refresh(payload);
   }
 
+  @ApiBearerAuth()
   @Get('verify-token')
-  // @UseGuards(JwtAuthGuard) // <-- Esto valida el token y mete el payload en req.user
-  async verifyToken(@Req() req: Request, @Res() res: Response) {
-    const jwtPayload = req['user'] as { sub: string };
+  @UseGuards(JwtAuthGuard)
+  async verifyToken(@CurrentUser() user: any, @Res() res: Response) {
+    const jwtPayload = user as { id: string };
 
-    if (!jwtPayload || !jwtPayload.sub) {
+    if (!jwtPayload || !jwtPayload.id) {
       return res.status(HttpStatus.OK).json(null);
     }
 
-    const mappedUser = await this._authService.verifyToken(jwtPayload.sub);
+    const mappedUser = await this._authService.verifyToken(jwtPayload.id);
 
     if (!mappedUser) {
       return res.status(HttpStatus.OK).json(null);
@@ -93,7 +96,6 @@ export class AuthController {
   }
 
   @Post('verify-phone')
-  // @UseGuards(JwtAuthGuard)
   async verifyPhone(
     @Body() request: VerifyPhoneDTO,
     @CurrentUser() user: User, // need to check the model for user
@@ -102,7 +104,6 @@ export class AuthController {
   }
 
   @Post('send-phone-verification-code')
-  // @UseGuards(JwtAuthGuard)
   async sendPhoneVerificationCode(
     @Body() request: SendPhoneVerificationDTO,
     @CurrentUser() user: User,
@@ -110,8 +111,9 @@ export class AuthController {
     return await this._authService.sendPhoneVerificationCode(request, user.id);
   }
 
+  @ApiBearerAuth()
   @Post('change-password')
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   async changePassword(
     @Body() dto: ChangePasswordDTO,
     @CurrentUser() user: User,
