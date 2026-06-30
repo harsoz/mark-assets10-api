@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { GetProjectDTO } from '../dtos/get-project.dto';
 import { ProjectType } from 'src/domain/types/project.type';
 import { DataSource } from 'typeorm';
-import { ProjectModel, UserModel } from 'src/domain/models';
+import { UserModel } from 'src/domain/models';
 import { UserViewModel } from './view/user-view.model';
 import { ProjectViewModel } from './view/project-view.model';
 import { ProjectCollectionService } from '../project-collection.service';
@@ -11,7 +11,6 @@ import {
   UserRepository,
 } from 'src/infrastructure/repository';
 import {
-  mapDynamicField,
   mapEducation,
   mapProfessionalExperience,
   mapUser,
