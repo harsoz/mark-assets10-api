@@ -59,8 +59,6 @@ export function mapCountry(entity: Country): CountryModel {
     subRegionId: entity.subRegionId,
     subRegionData: entity.subRegionData ? mapSubRegion(entity.subRegionData) : undefined,
     states: entity.states?.map(mapState),
-    createdAt: entity.createdAt,
-    updatedAt: entity.updatedAt,
   };
 }
 
@@ -79,8 +77,6 @@ export function mapState(entity: State): StateModel {
     cities: entity.cities?.map(mapCity),
     latitude: entity.latitude,
     longitude: entity.longitude,
-    createdAt: entity.createdAt,
-    updatedAt: entity.updatedAt,
   };
 }
 
@@ -97,8 +93,6 @@ export function mapCity(entity: City): CityModel {
     state: entity.state ? mapState(entity.state) : undefined,
     latitude: entity.latitude,
     longitude: entity.longitude,
-    createdAt: entity.createdAt,
-    updatedAt: entity.updatedAt,
   };
 }
 
@@ -110,8 +104,6 @@ export function mapRegion(entity: Region): RegionModel {
     flag: entity.flag,
     wikiDataId: entity.wikiDataId,
     subRegions: entity.subRegions?.map(mapSubRegion),
-    createdAt: entity.createdAt,
-    updatedAt: entity.updatedAt,
   };
 }
 
@@ -124,8 +116,6 @@ export function mapSubRegion(entity: SubRegion): SubRegionModel {
     wikiDataId: entity.wikiDataId,
     regionId: entity.regionId,
     region: entity.region ? mapRegion(entity.region) : undefined,
-    createdAt: entity.createdAt,
-    updatedAt: entity.updatedAt,
   };
 }
 
@@ -192,8 +182,6 @@ export function mapDynamicField(entity: DynamicField): DynamicFieldModel {
     profileType: entity.profileType,
     profile: entity.profile,
     jsonData: entity.jsonData,
-    createdAt: entity.createdAt,
-    updatedAt: entity.updatedAt,
   };
 }
 
@@ -281,8 +269,6 @@ export function mapAuthCode(entity: AuthCode): AuthCodeModel {
     used: entity.used,
     expiresAt: entity.expiresAt,
     user: entity.user ? mapUser(entity.user) : undefined,
-    createdAt: entity.createdAt,
-    updatedAt: entity.updatedAt,
   };
 }
 
@@ -293,8 +279,6 @@ export function mapEmailTemplate(entity: EmailTemplate): EmailTemplateModel {
     subject: entity.subject,
     note: entity.note,
     template: entity.template,
-    createdAt: entity.createdAt,
-    updatedAt: entity.updatedAt,
   };
 }
 
@@ -303,8 +287,6 @@ export function mapNotification(entity: Notification): NotificationModel {
     id: entity.id,
     title: entity.title,
     description: entity.description,
-    createdAt: entity.createdAt,
-    updatedAt: entity.updatedAt,
   };
 }
 

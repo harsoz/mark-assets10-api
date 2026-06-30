@@ -18,7 +18,7 @@ import { UpdateRoleDTO } from './dtos/update-role.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('v1/roles/')
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 export class RoleController {
   constructor(private readonly _roleService: RoleService) {}
 

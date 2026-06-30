@@ -1,4 +1,4 @@
-import type { BaseModel } from './base.model';
+import type { BaseModel, TimeStampsModel } from './base.model';
 import type { CountryModel, StateModel, CityModel } from './location.model';
 import type { UserModel } from './user.model';
 import type { Currency } from '../types/currency.type';
@@ -12,7 +12,7 @@ import type { InfrastructureType } from '../types/infrastructure.type';
 import type { InfrastructureSegment } from '../types/infrastructure-segment.type';
 import type { ServiceType } from '../types/service.type';
 
-export interface ProjectModel extends BaseModel {
+export interface ProjectModel extends BaseModel, TimeStampsModel {
   status?: ProjectStatus;
   currency: Currency;
   measureUnit: MeasureUnit;
@@ -48,7 +48,7 @@ export interface ProjectModel extends BaseModel {
   projectFiles?: ProjectFileModel[];
 }
 
-export interface ProjectFileModel extends BaseModel {
+export interface ProjectFileModel extends BaseModel, TimeStampsModel {
   type: FileType;
   file: string;
   fileName: string;

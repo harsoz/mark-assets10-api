@@ -29,8 +29,6 @@ export interface DynamicFieldModel {
   jsonData: string;
   userId?: string;
   user?: UserModel;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface DataUserProfileModel {

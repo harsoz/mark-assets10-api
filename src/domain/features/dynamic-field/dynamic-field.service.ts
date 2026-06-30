@@ -22,15 +22,16 @@ export class DynamicFieldService {
     const [data, totalCount] = await this._dynamicFieldRepository
       .createQueryBuilder('dynamicField')
       .getManyAndCount();
-    return { totalCount, data: data as DynamicFieldModel[] };
+
+    const mapped = data.map((d) => this._dynamicFieldRepository.toModel(d));
+    return { totalCount, data: mapped };
   }
 
   async getByProfile(profile: string): Promise<DynamicFieldModel> {
     const result = await this._dynamicFieldRepository.findOne({
       where: { profile },
     });
-    if (!result)
-      throw new NotFoundException('Dynamic field page does not exist');
+    if (!result) throw new NotFoundException('Dynamic field does not exist');
     return this._dynamicFieldRepository.toModel(result);
   }
 
@@ -57,7 +58,7 @@ export class DynamicFieldService {
       where: { id: dynamicFieldId },
     });
     if (!dynamicField)
-      throw new NotFoundException('Dynamic field page does not exist');
+      throw new NotFoundException('Dynamic field does not exist');
 
     dynamicField.jsonData = request.jsonData;
     const dynamicFieldUpdated = await this._dynamicFieldRepository.update(
@@ -76,21 +77,23 @@ export class DynamicFieldService {
   async getUserDynamicFields(
     userId: string,
   ): Promise<UserDynamicFieldRecordModel> {
-    const user = await this._userDynamicFieldRepository
+    const userDynamicField = await this._userDynamicFieldRepository
       .createQueryBuilder('userDynamicField')
       .leftJoinAndSelect('userDynamicField.dynamicField', 'dynamicField')
       .where('userDynamicField.userId = :userId', { userId })
       .getOne();
 
-    if (!user)
+    if (!userDynamicField)
       throw new NotFoundException('Dynamic field configuration does not exist');
 
     // check this part
     return {
       userId: userId,
-      profile: user.dynamicField?.profile!,
-      dynamicFieldValues: user.dynamicFieldValues ?? '{}',
-      dynamicField: user.dynamicField,
+      profile: userDynamicField.dynamicField?.profile!,
+      dynamicFieldValues: userDynamicField.dynamicFieldValues ?? '{}',
+      dynamicField: this._dynamicFieldRepository.toModel(
+        userDynamicField.dynamicField!,
+      ),
     };
   }
 }

@@ -55,7 +55,7 @@ export interface CityModel extends BaseLocationModel {
   state?: StateModel;
 }
 
-export interface RegionModel extends TimeStampsModel {
+export interface RegionModel {
   id: number;
   name: string;
   translations: string;
@@ -64,7 +64,7 @@ export interface RegionModel extends TimeStampsModel {
   subRegions?: SubRegionModel[];
 }
 
-export interface SubRegionModel extends TimeStampsModel {
+export interface SubRegionModel {
   id: number;
   name: string;
   translations: string;

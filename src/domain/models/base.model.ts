@@ -3,7 +3,7 @@ export interface TimeStampsModel {
   updatedAt?: Date;
 }
 
-export interface BaseModel extends TimeStampsModel {
+export interface BaseModel {
   id: string;
 }
 

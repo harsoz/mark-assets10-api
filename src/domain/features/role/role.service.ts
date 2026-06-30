@@ -104,8 +104,9 @@ export class RoleService {
     const [data, totalCount] = await query.getManyAndCount();
 
     const mappedRoles = data.map((role) => {
+      const mappedRole = this.roleRepo.toModel(role);
       return {
-        ...this.roleRepo.toModel(role),
+        ...mappedRole,
         permissions: role.permissions
           ? role.permissions.map((p) => p.value)
           : [],
