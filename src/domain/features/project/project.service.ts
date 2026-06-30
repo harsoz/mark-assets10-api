@@ -54,6 +54,14 @@ export class ProjectService {
     return this.queryService.getUsersFromProject(projectId);
   }
 
+  /**
+   * @param projectId
+   * @returns a user details with projects
+   */
+  async getUserWithProjects(userId: string) {
+    return this.queryService.getUserWithProjects(userId);
+  }
+
   async create(
     projectType: ProjectType,
     project: any,

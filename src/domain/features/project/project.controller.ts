@@ -26,12 +26,12 @@ import { UpdateDTO } from './dtos/update.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('v1/projects/')
+// @UseGuards(JwtAuthGuard)
 export class ProjectController {
   constructor(private readonly _projectService: ProjectService) {}
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard)
   getById(@Param('id') id: string) {
     return this._projectService.getById(id);
   }
@@ -64,6 +64,12 @@ export class ProjectController {
   @HttpCode(HttpStatus.OK)
   getUsersFromProject(@Param('projectId') projectId: string) {
     return this._projectService.getUsersFromProject(projectId);
+  }
+
+  @Get('/users/:userId/project/details')
+  @HttpCode(HttpStatus.OK)
+  async getUserWithProjects(@Param('userId') userId: string) {
+    return this._projectService.getUserWithProjects(userId);
   }
 
   @Post(':projectType/:ownerId')
