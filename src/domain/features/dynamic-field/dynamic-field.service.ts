@@ -93,16 +93,4 @@ export class DynamicFieldService {
       dynamicField: user.dynamicField,
     };
   }
-
-  // not sure what was this method doing, it seems like it's the same like the first one
-//   async getProfiles(): Promise<{
-//     totalCount: number;
-//     data: DynamicFieldModel[];
-//   }> {
-//     const [data, totalCount] = await this._dynamicFieldRepository
-//       .createQueryBuilder('dynamicField')
-//       .getManyAndCount();
-
-//     return { totalCount, data };
-//   }
 }

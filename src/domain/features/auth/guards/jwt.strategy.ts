@@ -12,14 +12,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       secretOrKey: _configService.get<string>('ACCESS_TOKEN_SECRET') ?? '', 
     });
   }
+  
+  // get the user props accordingly
+  // const user = await this.userService.findOneWithPermissions(payload.sub);
 
   async validate(payload: any) {
-    // Lo que retornes en esta función es EXACTAMENTE lo que se guardará en req.user
-    // En tu caso, tu payload tenía 'sub' (id) y 'email'
+    // this will enable User props from CurrentUser decorator
     return { 
       id: payload.sub, 
-      email: payload.email 
-      // role: payload.role 
+      email: payload.email,
+      role: '',
+      permissions: []
     };
   }
 }

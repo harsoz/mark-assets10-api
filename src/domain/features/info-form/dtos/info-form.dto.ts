@@ -1,20 +1,19 @@
-import { IsEmail, IsOptional, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class InfoFormDTO {
-  
   @IsString()
   @IsOptional()
   message: string = '';
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsEmail()
-  customerEmail?: string;
+  customerEmail!: string;
 
   @IsOptional()
   @IsString()
   customerPhone?: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  customerName?: string;
+  customerName!: string;
 }

@@ -456,7 +456,6 @@ export function mapUser(entity: User): UserModel {
 export function mapPermission(entity: Permission): PermissionModel {
   return {
     id: entity.id,
-    roleId: entity.roleId,
     value: entity.value
   };
 }

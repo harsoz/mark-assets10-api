@@ -7,16 +7,22 @@ import {
   UploadedFiles,
   ParseFilePipe,
   MaxFileSizeValidator,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { StorageService } from 'src/shared/third-parties/storage.service';
-// import { ApiBearerAuth } from '@nestjs/swagger';
-// import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // Ajusta la ruta según tu estructura
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('v1/files')
+@UseGuards(JwtAuthGuard) 
 export class FileController {
   constructor(private readonly _storageService: StorageService) {}
 
   @Post()
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
   async post(
     @UploadedFiles(
       new ParseFilePipe({
@@ -27,7 +33,6 @@ export class FileController {
       }),
     )
     file: Express.Multer.File,
-    @Req() req: any,
   ) {
     return await this._storageService.uploadFile(file);
   }

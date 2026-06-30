@@ -13,12 +13,12 @@ export class PermissionRepository extends BaseRepository<Permission, PermissionM
     super(repo, 'id');
   }
 
-  async findByRoleId(roleId: string): Promise<Permission[]> {
-    return await this.repository.find({ where: { roleId } });
+  async findByRoleId(id: number): Promise<Permission[]> {
+    return await this.repository.find({ where: { id } });
   }
 
-  async deleteByRoleAndValue(roleId: string, value: string): Promise<void> {
-    await this.repository.delete({ roleId, value });
+  async delete(id: number): Promise<void> {
+    await this.repository.delete(id);
   }
 
   public toModel(permission: Permission): PermissionModel {

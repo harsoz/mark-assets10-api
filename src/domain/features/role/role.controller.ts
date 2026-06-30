@@ -1,19 +1,32 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { RoleService } from './role.service';
 import { GetRoleDTO } from './dtos/get-role.dto';
 import { CreateRoleDTO } from './dtos/create-role.dto';
 import { UpdateRoleDTO } from './dtos/update-role.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-@Controller("v1/roles/")
+@Controller('v1/roles/')
+// @UseGuards(JwtAuthGuard)
 export class RoleController {
+  constructor(private readonly _roleService: RoleService) {}
 
-  constructor(private readonly _roleService: RoleService){}
-
-  @Get()
+  @Get('all')
   @HttpCode(HttpStatus.OK)
-  getAll(@Body() request: GetRoleDTO) {
+  getAll(@Query() request: GetRoleDTO) {
 
-    if(request.isPaginated()){
+    if (request.isPaginated()) {
       return this._roleService.get(request);
     }
 
@@ -26,9 +39,9 @@ export class RoleController {
     return this._roleService.getRole(roleId);
   }
 
-  @Get()
+  @Get('management-roles/all')
   @HttpCode(HttpStatus.OK)
-  getManagementRoles(@Body() request: GetRoleDTO) {
+  getManagementRoles() {
     return this._roleService.getManagementRoles();
   }
 
@@ -52,5 +65,4 @@ export class RoleController {
     const deletedRole = this._roleService.delete(roleId);
     return deletedRole;
   }
-
 }
