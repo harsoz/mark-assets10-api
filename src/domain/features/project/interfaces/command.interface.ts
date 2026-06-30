@@ -26,7 +26,7 @@ export interface ICommand {
   assignAnalyst(projectId: string, analystId: string, userProjectCapacity: number): Promise<ProjectModel>;
   closeAgreement(projectId: string, buyerId: string): Promise<ProjectModel>;
   uploadFiles(projectId: string, galery: Express.Multer.File[] | undefined, files: Express.Multer.File[] | undefined, fileType: FileType): Promise<ProjectFileModel[]>;
-  updateStatus(projectId: string, status: ProjectStatus): Promise<ProjectModel>;
+//   updateStatus(projectId: string, status: ProjectStatus): Promise<ProjectModel>;
 }
 
 

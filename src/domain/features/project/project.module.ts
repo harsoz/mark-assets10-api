@@ -15,9 +15,10 @@ import { InfrastructureCommand } from './commands/infrastructure.command';
 import { NaturalResourcesDevelopmentCommand } from './commands/natural-resources-dev.command';
 import { NaturalResourcesFinancingCommand } from './commands/natural-resources-fin.command';
 import { RealStateCommand } from './commands/real-state.command';
+import { StateMachineModule } from '../state-machine/state-machine.module';
 
 @Module({
-  imports: [RepositoryModule, ThirdPartiesModule],
+  imports: [RepositoryModule, ThirdPartiesModule, StateMachineModule],
   controllers: [ProjectController],
   providers: [
     ProjectCollectionService,
@@ -34,6 +35,6 @@ import { RealStateCommand } from './commands/real-state.command';
     ProjectQuery,
     ProjectService,
   ],
-  exports: [CommandCollection]
+  exports: [CommandCollection],
 })
 export class ProjectModule {}

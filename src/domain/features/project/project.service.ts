@@ -7,7 +7,7 @@ import { ProjectQuery } from './queries/project.query';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
 import { FilesDTO } from './dtos/file.dto';
 import { CommandCollection } from './commands/collection.command';
-import { ProjectViewModel } from './queries/view/project-view.model';
+import { StateMachineService } from '../state-machine/state-machine.service';
 
 @Injectable()
 export class ProjectService {
@@ -16,7 +16,7 @@ export class ProjectService {
     private readonly projectCollectionService: ProjectCollectionService,
     private readonly queryService: ProjectQuery,
     private readonly commandCollection: CommandCollection,
-    // private readonly stateMachine: ProjectStateMachine,
+    private readonly stateMachine: StateMachineService,
   ) {}
 
   /**
@@ -146,5 +146,14 @@ export class ProjectService {
     if (!command) throw new Error(`Command not found for: ${projectType}`);
 
     return await command.deleteByDays(expireDays, statusToDelete);
+  }
+
+  async updateState(projectId: string, event: string) {
+    const project = await this.projectRepo.findById(projectId);
+    if (!project) throw new Error(`Project not found for: ${projectId}`);
+
+    const model = this.projectRepo.toModel(project);
+
+    await this.stateMachine.transition(model, event);
   }
 }

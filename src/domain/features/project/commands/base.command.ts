@@ -257,30 +257,30 @@ export abstract class BaseCommand implements ICommand {
     return project as ProjectModel;
   }
 
-  /**
-   * @deprecated this method potentially will not be used in this version
-   */
-  async updateStatus(
-    projectId: string,
-    status: ProjectStatus,
-  ): Promise<ProjectModel> {
-    const project = await this._projectRepo.findOne({
-      where: { id: projectId },
-    });
+  // /**
+  //  * @deprecated this method potentially will not be used in this version
+  //  */
+  // async updateStatus(
+  //   projectId: string,
+  //   status: ProjectStatus,
+  // ): Promise<ProjectModel> {
+  //   const project = await this._projectRepo.findOne({
+  //     where: { id: projectId },
+  //   });
 
-    if (!project) {
-      throw new NotFoundException(`El activo con ID ${projectId} no existe`);
-    }
+  //   if (!project) {
+  //     throw new NotFoundException(`El activo con ID ${projectId} no existe`);
+  //   }
 
-    if (this.isProjectAssigned(project))
-      throw new BadRequestException('Project is already assigned');
+  //   if (this.isProjectAssigned(project))
+  //     throw new BadRequestException('Project is already assigned');
 
-    project.status = status;
+  //   project.status = status;
 
-    await this._projectRepo.update(projectId, project);
+  //   await this._projectRepo.update(projectId, project);
 
-    return project as ProjectModel;
-  }
+  //   return project as ProjectModel;
+  // }
 
   async uploadFiles(
     projectId: string,

@@ -4,15 +4,17 @@ import { ProjectModel } from 'src/domain/models';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
 import { ProjectRepository } from 'src/infrastructure/repository';
 import { StateMachineCollectionService } from './state-machine-collection.service';
+import { EventService } from './event.service';
 
 @Injectable()
 export class StateMachineService {
   constructor(
     private readonly _repository: ProjectRepository,
     private readonly _machineCollectionService: StateMachineCollectionService,
+    private readonly _eventService: EventService,
   ) {}
 
-  async transitionProject(project: ProjectModel, event: string) {
+  async transition(project: ProjectModel, event: string) {
     const projectMachine = this._machineCollectionService.getMachine(
       project.projectType,
     );
@@ -32,9 +34,12 @@ export class StateMachineService {
     if (Object.values(ProjectStatus).includes(newStatus as ProjectStatus)) {
       project.status = newStatus as ProjectStatus;
 
-      // we can evaluate whether we need a notification
-
       await this._repository.update(project.id, project);
+
+      // fire and forget event to produce email & notifications
+      this._eventService
+        .emit(project, newStatus as ProjectStatus)
+        .catch(console.error);
     }
 
     projectActor.stop();

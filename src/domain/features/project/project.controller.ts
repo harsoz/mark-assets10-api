@@ -123,4 +123,12 @@ export class ProjectController {
       files,
     );
   }
+
+  @Put('state/:projectId/:event')
+  async updateState(
+    @Param('projectId') projectId: string,
+    @Param('event') event: string,
+  ) {
+    return this._projectService.updateState(projectId, event);
+  }
 }
