@@ -45,6 +45,12 @@ export class RoleController {
     return this._roleService.getManagementRoles();
   }
 
+  @Get('user/:userId')
+  @HttpCode(HttpStatus.OK)
+  getUserRoles(@Param('userId') userId: string) {
+    return this._roleService.getUserRoles(userId);
+  }
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
   createRole(@Body() request: CreateRoleDTO) {

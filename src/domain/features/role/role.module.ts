@@ -7,5 +7,6 @@ import { RepositoryModule } from 'src/infrastructure/repository/repository.modul
   imports: [RepositoryModule],
   controllers: [RoleController],
   providers: [RoleService],
+  exports: [RoleService],
 })
 export class RoleModule {}

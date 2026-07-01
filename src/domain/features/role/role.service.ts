@@ -5,27 +5,33 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { RoleRepository, UnitOfWork } from 'src/infrastructure/repository';
+import {
+  RoleRepository,
+  UnitOfWork,
+  UserRepository,
+} from 'src/infrastructure/repository';
 import { Permission, Role } from 'src/infrastructure/database';
 import { GetRoleDTO } from './dtos/get-role.dto';
 import { CreateRoleDTO } from './dtos/create-role.dto';
 import { UpdateRoleDTO } from './dtos/update-role.dto';
 import { In } from 'typeorm';
+import { UserRoleResponse } from './responses/user-role.response';
 
 @Injectable()
 export class RoleService {
   private readonly superAdminId: string;
 
   constructor(
-    private readonly roleRepo: RoleRepository,
-    private readonly config: ConfigService,
-    private readonly unitOfWork: UnitOfWork,
+    private readonly _roleRepository: RoleRepository,
+    private readonly _userRepository: UserRepository,
+    private readonly _configService: ConfigService,
+    private readonly _unitOfWork: UnitOfWork,
   ) {
-    this.superAdminId = this.config.get<string>('SUPER_ADMIN_ID') || '';
+    this.superAdminId = this._configService.get<string>('SUPER_ADMIN_ID') || '';
   }
 
   async getAll() {
-    const query = this.roleRepo
+    const query = this._roleRepository
       .createQueryBuilder('role')
       .leftJoin('role.permissions', 'permission')
       .select(['role', 'permission.value']);
@@ -34,7 +40,7 @@ export class RoleService {
 
     const mappedRoles = data.map((role) => {
       return {
-        ...this.roleRepo.toModel(role),
+        ...this._roleRepository.toModel(role),
         permissions: role.permissions
           ? role.permissions.map((p) => p.value)
           : [],
@@ -45,7 +51,7 @@ export class RoleService {
   }
 
   async get(request: GetRoleDTO) {
-    const query = this.roleRepo
+    const query = this._roleRepository
       .createQueryBuilder('role')
       .leftJoin('role.permissions', 'permission')
       .select(['role', 'permission.value']);
@@ -63,7 +69,7 @@ export class RoleService {
 
     const mappedRoles = data.map((role) => {
       return {
-        ...this.roleRepo.toModel(role),
+        ...this._roleRepository.toModel(role),
         permissions: role.permissions
           ? role.permissions.map((p) => p.value)
           : [],
@@ -74,7 +80,7 @@ export class RoleService {
   }
 
   async getRole(roleId: string) {
-    const query = this.roleRepo
+    const query = this._roleRepository
       .createQueryBuilder('role')
       .leftJoin('role.permissions', 'permission')
       .select(['role', 'permission.value'])
@@ -86,13 +92,13 @@ export class RoleService {
     if (!role) throw new NotFoundException('Role does not exist');
 
     return {
-      ...this.roleRepo.toModel(role),
+      ...this._roleRepository.toModel(role),
       permissions: role.permissions ? role.permissions.map((p) => p.value) : [],
     };
   }
 
   async getManagementRoles() {
-    const query = this.roleRepo
+    const query = this._roleRepository
       .createQueryBuilder('role')
       .leftJoin('role.permissions', 'permission')
       .select(['role', 'permission.value'])
@@ -104,7 +110,7 @@ export class RoleService {
     const [data, totalCount] = await query.getManyAndCount();
 
     const mappedRoles = data.map((role) => {
-      const mappedRole = this.roleRepo.toModel(role);
+      const mappedRole = this._roleRepository.toModel(role);
       return {
         ...mappedRole,
         permissions: role.permissions
@@ -116,8 +122,43 @@ export class RoleService {
     return { totalCount, data: mappedRoles };
   }
 
+  async getUserRoles(userId: string): Promise<UserRoleResponse> {
+    const userRoles = await this._userRepository
+      .createQueryBuilder('user')
+      .leftJoin('user.roles', 'role')
+      .leftJoinAndSelect('role.permissions', 'permission')
+      .select(['role.name', 'permission.value'])
+      .where('user.id = :userId', { userId })
+      .getRawMany();
+
+    if (!userRoles) {
+      return {
+        roles: [],
+        permissions: [],
+      };
+    }
+    
+    // usersRoles will be [0] because the user exists but has no roles
+    return {
+      roles: [
+        ...new Set(
+          userRoles
+            .filter((ur) => ur.role_name !== null)
+            .map((userRole) => userRole.role_name),
+        ),
+      ] as string[],
+      permissions: [
+        ...new Set(
+          userRoles
+            .filter((ur) => ur.permission_value !== null)
+            .flatMap((userRole) => userRole.permission_value),
+        ),
+      ] as string[],
+    };
+  }
+
   async create(request: CreateRoleDTO) {
-    return await this.unitOfWork.runInTransaction(async (manager) => {
+    return await this._unitOfWork.runInTransaction(async (manager) => {
       const existing = await manager.findOne(Role, {
         where: { name: request.name },
       });
@@ -139,12 +180,12 @@ export class RoleService {
         await manager.save(role);
       }
 
-      return this.roleRepo.toModel(role);
+      return this._roleRepository.toModel(role);
     });
   }
 
   async update(request: UpdateRoleDTO, roleId: string) {
-    return await this.unitOfWork.runInTransaction(async (manager) => {
+    return await this._unitOfWork.runInTransaction(async (manager) => {
       const role = await manager.findOne(Role, {
         where: { id: roleId },
         relations: {
@@ -199,15 +240,16 @@ export class RoleService {
       return true;
     });
   }
+
   async delete(roleId: string) {
     if (this.superAdminId && roleId !== this.superAdminId) {
       throw new ForbiddenException('Role is undeletable');
     }
 
-    const role = await this.roleRepo.findById(roleId);
+    const role = await this._roleRepository.findById(roleId);
     if (!role) throw new NotFoundException('Role does not exist');
 
-    await this.roleRepo.delete(roleId);
+    await this._roleRepository.delete(roleId);
 
     return true;
   }

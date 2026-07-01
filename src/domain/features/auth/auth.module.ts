@@ -9,6 +9,7 @@ import { EmailModule } from 'src/shared/email/email.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './guards/jwt.strategy';
 import { TokenService } from './token.service';
+import { RoleModule } from '../role/role.module';
 
 @Global()
 @Module({
@@ -18,6 +19,7 @@ import { TokenService } from './token.service';
       secret: 'MaquinaDeGuerraEslaOnda#899!',
       signOptions: { expiresIn: '60m' },
     }),
+    RoleModule,
     PassportModule,
     ThirdPartiesModule,
     EmailModule,

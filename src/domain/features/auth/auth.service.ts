@@ -131,8 +131,7 @@ export class AuthService {
       }
     }
 
-    const accessRequest = { sub: user.id, email: user.email };
-    return await this._tokenService.generateAuthTokens(accessRequest);
+    return await this._tokenService.generateAuthTokens(user);
   }
 
   async signInAdmin(payload: LoginDTO) {
@@ -164,10 +163,8 @@ export class AuthService {
       );
     }
 
-    // check if we need to include role in token
-    const accessRequest = { sub: user.id, email: user.email, role: 'admin' };
     return (await this._tokenService.generateAuthTokens(
-      accessRequest,
+      user,
     )) as AccessTokenResponseDTO;
   }
 
@@ -190,14 +187,7 @@ export class AuthService {
       //   throw new UnauthorizedException('Session expired or revoked.');
       // }
 
-      const newPayload = {
-        sub: user.id,
-        email: user.email,
-        // role: user.role
-      };
-
-      const accessToken =
-        await this._tokenService.generateAccessToken(newPayload);
+      const accessToken = await this._tokenService.generateAccessToken(user);
 
       return {
         accessToken,
@@ -321,13 +311,7 @@ export class AuthService {
       }
     }
 
-    const accessRequest = {
-      sub: user.id,
-      email: user.email,
-      // role: 'user.role ', check this
-    };
-
-    return await this._tokenService.generateAuthTokens(accessRequest);
+    return await this._tokenService.generateAuthTokens(user);
   }
 
   async verifyPhone(payload: VerifyPhoneDTO, userId: string) {
