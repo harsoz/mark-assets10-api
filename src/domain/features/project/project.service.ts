@@ -149,11 +149,6 @@ export class ProjectService {
   }
 
   async updateState(projectId: string, event: string) {
-    const project = await this.projectRepo.findById(projectId);
-    if (!project) throw new Error(`Project not found for: ${projectId}`);
-
-    const model = this.projectRepo.toModel(project);
-
-    await this.stateMachine.transition(model, event);
+    await this.stateMachine.resolveNextStateById(projectId, event);
   }
 }

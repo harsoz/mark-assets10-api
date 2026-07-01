@@ -11,7 +11,7 @@ export class OnPendingResourcesEvent implements IEvent {
     private readonly _emailService: EmailService,
   ) {}
 
-  async run(project: ProjectModel) {
-    // send emails, notifications...
+  run(project: ProjectModel ) {
+    // send emails, notifications... fire and forget
   }
 }
