@@ -361,6 +361,7 @@ export class AuthService {
     }
 
     user.password = await bcrypt.hash(dto.password, 10);
+    user.isFirstPasswordChanged = true;
 
     await this._userRepository.update(user.id, user);
 

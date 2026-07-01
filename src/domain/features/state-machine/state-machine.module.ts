@@ -5,9 +5,10 @@ import { EventService } from './event.service';
 import { RepositoryModule } from 'src/infrastructure/repository/repository.module';
 import { ThirdPartiesModule } from 'src/shared/third-parties/third-parties.module';
 import { OnPendingResourcesEvent } from './events/on-pending-resources.event';
+import { EmailModule } from 'src/shared/email/email.module';
 
 @Module({
-  imports: [RepositoryModule, ThirdPartiesModule],
+  imports: [RepositoryModule, ThirdPartiesModule, EmailModule],
   controllers: [],
   providers: [
     StateMachineCollectionService,
