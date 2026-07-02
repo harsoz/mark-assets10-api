@@ -131,4 +131,12 @@ export class ProjectController {
   ) {
     return this._projectService.updateState(projectId, event);
   }
+
+  @Put('event/:projectId/:event')
+  async sendEvent(
+    @Param('projectId') projectId: string,
+    @Param('event') event: string,
+  ) {
+    return this._projectService.sendEvent(projectId, event);
+  }
 }

@@ -1,3 +1,4 @@
 export interface IStateMachine{
-    getStateMachine(state: string): any;
+    getStatefulMachine(state: string): any;
+    getStatelessMachine(): any;
 }

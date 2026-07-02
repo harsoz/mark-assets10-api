@@ -45,9 +45,8 @@ export abstract class BaseCommand implements ICommand {
       throw new NotFoundException(`El activo con ID ${projectId} no existe`);
     }
 
-    project.status = ProjectStatus.Closed;
-
-    await this._projectRepo.update(projectId, project);
+    // we should use state machine
+    await this._projectRepo.update(projectId, { status: ProjectStatus.Closed });
   }
 
   async cancel(projectId: string, approverId: string) {
@@ -59,9 +58,10 @@ export abstract class BaseCommand implements ICommand {
       throw new NotFoundException(`El activo con ID ${projectId} no existe`);
     }
 
-    project.status = ProjectStatus.Cancelled;
-
-    await this._projectRepo.update(projectId, project);
+    // we should use state machine
+    await this._projectRepo.update(projectId, {
+      status: ProjectStatus.Cancelled,
+    });
   }
 
   async expire(expireDays: number) {
@@ -85,10 +85,11 @@ export abstract class BaseCommand implements ICommand {
       throw new NotFoundException(`El activo con ID ${projectId} no existe`);
     }
 
-    project.status = ProjectStatus.PendingClosed;
-    project.clientId = buyerId;
-
-    await this._projectRepo.update(projectId, project);
+    // we should use state machine
+    await this._projectRepo.update(projectId, {
+      clientId: buyerId,
+      status: ProjectStatus.PendingClosed,
+    });
   }
 
   async rejectDeal(projectId: string) {
@@ -100,10 +101,11 @@ export abstract class BaseCommand implements ICommand {
       throw new NotFoundException(`El activo con ID ${projectId} no existe`);
     }
 
-    project.status = ProjectStatus.Rejected;
-    project.clientId = undefined;
-
-    await this._projectRepo.update(projectId, project);
+    // we should use state machine
+    await this._projectRepo.update(projectId, {
+      status: ProjectStatus.Rejected,
+      clientId: undefined,
+    });
   }
 
   async delete(projectId: string) {
@@ -144,9 +146,7 @@ export abstract class BaseCommand implements ICommand {
       // we should validate is assigned against approver only
       throw new BadRequestException('Project is already assigned');
 
-    project.approverId = approverId;
-
-    await this._projectRepo.update(projectId, project);
+    await this._projectRepo.update(projectId, { approverId: approverId });
 
     return project as ProjectModel;
   }
@@ -174,9 +174,7 @@ export abstract class BaseCommand implements ICommand {
       // we should validate is assigned against approver only
       throw new BadRequestException('project is already assigned');
 
-    project.lawyerId = lawyerId;
-
-    await this._projectRepo.update(projectId, project);
+    await this._projectRepo.update(projectId, { lawyerId: lawyerId });
 
     return project as ProjectModel;
   }
@@ -204,9 +202,7 @@ export abstract class BaseCommand implements ICommand {
       // we should validate is assigned against approver only
       throw new BadRequestException('project is already assigned');
 
-    project.analystId = analystId;
-
-    await this._projectRepo.update(projectId, project);
+    await this._projectRepo.update(projectId, { analystId: analystId });
 
     return project as ProjectModel;
   }
@@ -223,10 +219,11 @@ export abstract class BaseCommand implements ICommand {
       throw new NotFoundException(`El activo con ID ${projectId} no existe`);
     }
 
-    project.status = ProjectStatus.AgreementClosed;
-    project.clientId = buyerId;
-
-    await this._projectRepo.update(projectId, project);
+    // we should use state machine
+    await this._projectRepo.update(projectId, {
+      status: ProjectStatus.AgreementClosed,
+      clientId: buyerId,
+    });
 
     return project as ProjectModel;
   }
@@ -254,6 +251,7 @@ export abstract class BaseCommand implements ICommand {
     }
 
     await this._projectRepo.update(projectId, project);
+
     return project as ProjectModel;
   }
 

@@ -1,5 +1,5 @@
 import { ProjectModel } from 'src/domain/models';
 
 export interface IEvent {
-  run(project: ProjectModel): void;
+  run(project: ProjectModel, args?: any): void;
 }

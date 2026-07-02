@@ -1,36 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { setup } from 'xstate';
-import { OnPendingResourcesEvent } from '../events/on-pending-resources.event';
+import { OnPendingResourcesEvent } from '../../events/on-pending-resources.event';
 import { ProjectModel } from 'src/domain/models';
+import { StatefulEvents } from './stateful-events';
 
-// the allowed events for the assets machine
-type ProjectEvent =
-  | { type: 'approved' }
-  | { type: 'rejected' }
-  | { type: 'resources-assigned' }
-  | { type: 'revision-accepted' }
-  | { type: 'revision-rejected' }
-  | { type: 'promise-rejected' }
-  | { type: 'promise-accepted' }
-  | { type: 'studies-accepted' }
-  | { type: 'studies-rejected' }
-  | { type: 'anteproject-accepted' }
-  | { type: 'anteproject-rejected' }
-  | { type: 'titles-accepted' }
-  | { type: 'titles-rejected' }
-  | { type: 'promise-paid' }
-  | { type: 'promise-not-paid' };
-
+/**
+ * This class defines the actions to be executed during state transitions in the state machine.
+ * Each action corresponds to a specific event and is responsible for executing the necessary logic when that event is triggered.
+ */
 @Injectable()
-export class AssetsMachineActions {
+export class StatefulActions {
   constructor(private readonly _onPendingResources: OnPendingResourcesEvent) {}
 
-  setupMachine() {
+  setupActions() {
     return setup({
       types: {} as {
-        input: { project: ProjectModel };
-        events: ProjectEvent;
-        context: { project: ProjectModel | null };
+        input: { project: ProjectModel, args: any };
+        events: StatefulEvents;
+        context: { project: ProjectModel | null, args: any };
       },
       actions: {
         runOnPendingResources: ({ context }) => this._onPendingResources.run(context.project as ProjectModel),

@@ -14,16 +14,52 @@ export class StateMachineService {
     private readonly _machineCollectionService: StateMachineCollectionService,
   ) {}
 
-  async resolveNextStateById(projectId: string, event: string) {
-    const project = await this._repository.findById(projectId);
+  async resolveEventById(projectId: string, event: string, args?: any) {
+    try {
+      const project = await this._repository.findById(projectId);
 
-    if (!project) throw new Error(`Project not found for id: ${projectId}`);
-    const mappedProject = this._repository.toModel(project);
+      if (!project) throw new Error(`Project not found for id: ${projectId}`);
+      const mappedProject = this._repository.toModel(project);
+      const projectMachine = this._machineCollectionService.getMachine(
+        project.projectType,
+      );
+      if (!projectMachine)
+        throw new Error(
+          `Machine not found for project type: ${project.projectType}`,
+        );
 
-    await this.resolveNextStateByProject(mappedProject, event);
+      const projectActor = createActor(projectMachine.getStatelessMachine(), {
+        input: { project: mappedProject, args },
+      });
+
+      projectActor.start();
+
+      projectActor.send({ type: event });
+
+      projectActor.stop();
+    } catch (error) {
+      this._logger.error(error);
+    }
   }
 
-  async resolveNextStateByProject(project: ProjectModel, event: string) {
+  async resolveNextStateById(projectId: string, event: string, args?: any) {
+    try {
+      const project = await this._repository.findById(projectId);
+
+      if (!project) throw new Error(`Project not found for id: ${projectId}`);
+      const mappedProject = this._repository.toModel(project);
+
+      await this.resolveNextStateByProject(mappedProject, event);
+    } catch (error) {
+      this._logger.error(error);
+    }
+  }
+
+  async resolveNextStateByProject(
+    project: ProjectModel,
+    event: string,
+    args?: any,
+  ) {
     try {
       const projectMachine = this._machineCollectionService.getMachine(
         project.projectType,
@@ -34,9 +70,9 @@ export class StateMachineService {
         );
 
       const projectActor = createActor(
-        projectMachine.getStateMachine(project.status as string),
+        projectMachine.getStatefulMachine(project.status as string),
         {
-          input: { project },
+          input: { project, args },
         },
       );
 
@@ -48,7 +84,7 @@ export class StateMachineService {
 
       const newStatus = nextState.value as string;
 
-      await this._updateProjectStatus(project, newStatus as ProjectStatus);
+      await this._updateProjectStatus(project.id, newStatus as ProjectStatus);
 
       projectActor.stop();
     } catch (error) {
@@ -57,13 +93,12 @@ export class StateMachineService {
   }
 
   private async _updateProjectStatus(
-    project: ProjectModel,
+    projectId: string,
     newStatus: ProjectStatus,
   ) {
     if (Object.values(ProjectStatus).includes(newStatus as ProjectStatus)) {
-      project.status = newStatus as ProjectStatus;
-
-      await this._repository.update(project.id, project);
+      // we delegate the update
+      await this._repository.update(projectId, { status: newStatus });
     }
   }
 }

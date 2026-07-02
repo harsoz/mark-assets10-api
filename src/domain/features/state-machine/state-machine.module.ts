@@ -5,8 +5,9 @@ import { RepositoryModule } from 'src/infrastructure/repository/repository.modul
 import { ThirdPartiesModule } from 'src/shared/third-parties/third-parties.module';
 import { OnPendingResourcesEvent } from './events/on-pending-resources.event';
 import { EmailModule } from 'src/shared/email/email.module';
-import { AssetsMachine } from './machines/assets-machine.state';
-import { AssetsMachineActions } from './machines/assets-machine.actions';
+import { BaseMachine } from './machines/base.machine';
+import { StatelessActions } from './machines/config/stateless.actions';
+import { StatefulActions } from './machines/config/stateful.actions';
 
 @Module({
   imports: [RepositoryModule, ThirdPartiesModule, EmailModule],
@@ -18,8 +19,9 @@ import { AssetsMachineActions } from './machines/assets-machine.actions';
     OnPendingResourcesEvent,
 
     //machines
-    AssetsMachineActions,
-    AssetsMachine,
+    StatefulActions,
+    StatelessActions,
+    BaseMachine,
   ],
   exports: [StateMachineService],
 })

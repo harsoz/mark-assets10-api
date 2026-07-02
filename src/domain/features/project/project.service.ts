@@ -151,4 +151,8 @@ export class ProjectService {
   async updateState(projectId: string, event: string) {
     await this.stateMachine.resolveNextStateById(projectId, event);
   }
+
+    async sendEvent(projectId: string, event: string) {
+    await this.stateMachine.resolveEventById(projectId, event, { buyerId: "my-buyer"});
+  }
 }

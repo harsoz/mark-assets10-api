@@ -86,6 +86,7 @@ export class ProjectQuery {
   }
 
   async getUsersFromProject(projectId: string) {
+    // it's more efficient to use getOne() since we already have all users props
     const query = this._projectRespository
       .createQueryBuilder('project')
       .innerJoinAndSelect('project.owner', 'owner')
