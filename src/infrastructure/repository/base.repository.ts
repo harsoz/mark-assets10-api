@@ -76,5 +76,13 @@ export abstract class BaseRepository<
     return entities;
   }
 
+  async exists(id: string | number): Promise<boolean> {
+    return await this.repository.exists({ where: this.buildPrimaryKeyCriteria(id) })
+  }
+
+  async existsBy(options: FindOptionsWhere<TEntity>): Promise<boolean> {
+    return await this.repository.existsBy(options);
+  }
+
   abstract toModel(entity: TEntity): TModel;
 }

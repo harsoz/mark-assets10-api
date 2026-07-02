@@ -30,7 +30,10 @@ export class RoleService {
     this.superAdminId = this._configService.get<string>('SUPER_ADMIN_ID') || '';
   }
 
-  async getAll() {
+  async getRolesAll() {
+    // we use entity roles since it's easier to get the list of roles with permissions
+    // and we don't need to map them to the model since we are not returning them to the client
+    // if any performance issue, we might need to use raw query and map the result to the model, but for now, this is fine
     const query = this._roleRepository
       .createQueryBuilder('role')
       .leftJoin('role.permissions', 'permission')
@@ -50,7 +53,10 @@ export class RoleService {
     return { totalCount, data: mappedRoles };
   }
 
-  async get(request: GetRoleDTO) {
+  async getRoles(request: GetRoleDTO) {
+    // we use entity roles since it's easier to get the list of roles with permissions
+    // and we don't need to map them to the model since we are not returning them to the client
+    // if any performance issue, we might need to use raw query and map the result to the model, but for now, this is fine
     const query = this._roleRepository
       .createQueryBuilder('role')
       .leftJoin('role.permissions', 'permission')
@@ -80,6 +86,9 @@ export class RoleService {
   }
 
   async getRole(roleId: string) {
+    // we use entity roles since it's easier to get the list of roles with permissions
+    // and we don't need to map them to the model since we are not returning them to the client
+    // if any performance issue, we might need to use raw query and map the result to the model, but for now, this is fine
     const query = this._roleRepository
       .createQueryBuilder('role')
       .leftJoin('role.permissions', 'permission')
@@ -98,6 +107,9 @@ export class RoleService {
   }
 
   async getManagementRoles() {
+    // we use entity roles since it's easier to get the list of roles with permissions
+    // and we don't need to map them to the model since we are not returning them to the client
+    // if any performance issue, we might need to use raw query and map the result to the model, but for now, this is fine
     const query = this._roleRepository
       .createQueryBuilder('role')
       .leftJoin('role.permissions', 'permission')
@@ -122,6 +134,11 @@ export class RoleService {
     return { totalCount, data: mappedRoles };
   }
 
+  /**
+   * @readonly
+   * @param userId 
+   * @returns all the roles & permissions of a user
+   */
   async getUserRoles(userId: string): Promise<UserRoleResponse> {
     const userRoles = await this._userRepository
       .createQueryBuilder('user')
@@ -137,7 +154,7 @@ export class RoleService {
         permissions: [],
       };
     }
-    
+
     // usersRoles will be [0] because the user exists but has no roles
     return {
       roles: [
@@ -159,7 +176,7 @@ export class RoleService {
 
   async create(request: CreateRoleDTO) {
     return await this._unitOfWork.runInTransaction(async (manager) => {
-      const existing = await manager.findOne(Role, {
+      const existing = await manager.exists(Role, {
         where: { name: request.name },
       });
       if (existing) throw new ConflictException('Role already exists');
@@ -246,7 +263,7 @@ export class RoleService {
       throw new ForbiddenException('Role is undeletable');
     }
 
-    const role = await this._roleRepository.findById(roleId);
+    const role = await this._roleRepository.exists(roleId);
     if (!role) throw new NotFoundException('Role does not exist');
 
     await this._roleRepository.delete(roleId);

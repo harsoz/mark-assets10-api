@@ -8,10 +8,15 @@ import {
 import { Permissions } from 'src/domain/types/permission.type';
 import { UserPermissions } from 'src/domain/types/user-permission.type';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { PermissionService } from './permission.service';
 
 @Controller('v1/permissions')
 @UseGuards(JwtAuthGuard)
 export class PermissionController {
+
+  constructor(private readonly _permissionService: PermissionService
+  ) {}  
+
   // we probably need to use the service
   @Get()
   @HttpCode(HttpStatus.OK)

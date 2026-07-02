@@ -1,15 +1,19 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { CommandCollection } from '../project/commands/collection.command';
-import { ProjectStatus } from 'src/domain/types/project-status.type';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DeleteProjectByDateJob {
   private readonly logger = new Logger(DeleteProjectByDateJob.name);
   private readonly _daysToExpire: number;
 
-  constructor(private readonly _commands: CommandCollection) {
-    this._daysToExpire = 10; // comming from config
+  constructor(
+    private readonly _commands: CommandCollection,
+    private readonly _configService: ConfigService,
+  ) {
+    this._daysToExpire =
+      this._configService.get<number>('EXPIRATION_DAYS_THRESHOLD') || 10;
   }
 
   @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)

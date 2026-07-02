@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { CommandCollection } from '../project/commands/collection.command';
 import { ProjectStatus } from 'src/domain/types/project-status.type';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DeleteProjectByDateJob {
@@ -9,8 +10,11 @@ export class DeleteProjectByDateJob {
   private readonly _daysToDelete: number;
   private readonly _statusToDelete: ProjectStatus[];
 
-  constructor(private readonly _commands: CommandCollection) {
-    this._daysToDelete = 30; // comming from config
+  constructor(
+    private readonly _commands: CommandCollection,
+    private readonly _configService: ConfigService,
+  ) {
+    this._daysToDelete = this._configService.get<number>('DAYS_TO_DELETE_THRESHOLD') || 30;
     this._statusToDelete = [ProjectStatus.Cancelled, ProjectStatus.Expired];
   }
 
@@ -27,7 +31,7 @@ export class DeleteProjectByDateJob {
       });
       await Promise.all(tasks);
     } catch (error: any) {
-        this.logger.error(`Error deleting projects by days: ${error.message}`);
+      this.logger.error(`Error deleting projects by days: ${error.message}`);
     }
 
     this.logger.log('Projects deleted by days');

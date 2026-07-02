@@ -31,19 +31,25 @@ export class DynamicFieldController {
     return await this._dynamicFieldsService.getUserDynamicFields(id);
   }
 
+  @Get('all/profiles/:profileId')
+  @HttpCode(HttpStatus.OK)
+  async getByProfile(@Param('profileId') profileId: string) {
+    return await this._dynamicFieldsService.getByProfile(profileId);
+  }
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() request: CreateOrUpdateFieldDTO) {
-    return await this._dynamicFieldsService.create(request);
+  async create(@Body() payload: CreateOrUpdateFieldDTO) {
+    return await this._dynamicFieldsService.create(payload);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
   async update(
-    @Body() request: CreateOrUpdateFieldDTO,
+    @Body() payload: CreateOrUpdateFieldDTO,
     @Param('id') id: number,
   ) {
-    return await this._dynamicFieldsService.update(request, id);
+    return await this._dynamicFieldsService.update(payload, id);
   }
 
   @Delete(':id')

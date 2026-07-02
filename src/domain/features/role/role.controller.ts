@@ -18,7 +18,7 @@ import { UpdateRoleDTO } from './dtos/update-role.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('v1/roles/')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class RoleController {
   constructor(private readonly _roleService: RoleService) {}
 
@@ -27,10 +27,10 @@ export class RoleController {
   getAll(@Query() request: GetRoleDTO) {
 
     if (request.isPaginated()) {
-      return this._roleService.get(request);
+      return this._roleService.getRoles(request);
     }
 
-    return this._roleService.getAll();
+    return this._roleService.getRolesAll();
   }
 
   @Get(':roleId')

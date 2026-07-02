@@ -2,6 +2,7 @@ import type {
   DeepPartial,
   FindManyOptions,
   FindOneOptions,
+  FindOptionsWhere,
   ObjectLiteral,
   SelectQueryBuilder
 } from 'typeorm';
@@ -15,5 +16,7 @@ export interface IBaseRepository<TEntity extends ObjectLiteral, TModel> {
   findOne(options: FindOneOptions<TEntity>): Promise<TEntity | null>;
   findAll(options?: FindManyOptions<TEntity>): Promise<TEntity[]>;
   count(options?: FindManyOptions<TEntity>): Promise<number> ;
+  exists(id: string | number): Promise<boolean>;
+  existsBy(options: FindOptionsWhere<TEntity>): Promise<boolean>;
   toModel(entity: TEntity): TModel;
 }
